@@ -1,0 +1,25 @@
+import 'package:flutter/material.dart';
+
+Color kPrimaryColor = Color(0xFF2A4B9B);
+Color kInactiveTabIcon = Color(0xFF939393);
+Color kHomeScaffoldBg = Color(0xFFF8F8F8);
+Color kSearchFieldOutline = Color(0xFFD9D9D9);
+Color kSearchFieldHint = Color(0xFFC8C8CB);
+Color kInactiveChip = Color(0xFF393F42);
+Color kLoyaltyPointText = Color(0xFFD69400);
+Color kDiscountProductText = Color(0xFF8E8E8E);
+Color kBlueTextBtn = Color(0xFF3970F6);
+Color kProductBg = Color(0xFFFAFAFC);
+Color kFreeShippingBg = Color(0xFFFFF500);
+Color kProductGreyText = Color(0xFFB1B1B1);
+Color kDescriptionGreyText = Color(0xFF828282);
+Color kDescriptionBlackText = Color(0xFF18191F);
+Color kQuantityBg = Color(0xFFF1F1F1);
+Color kElevatedButtonBlackBg = Color(0xFF222222);
+Color kTextFieldBorder = Color(0xFFA8A8A9);
+Color kTextFieldHint = Color(0xFF676767);
+Color kTextFieldBg = Color(0xFF8d8d8d);
+Color kCartProductBg = Color(0xFFf7f7f7);
+Color kOff = Color(0xFFFF0000);
+Color kShippingCost = Color(0xFF2CCA12);
+Color kSwitchBg = Color(0xFFE7E7E7);
