@@ -17,9 +17,20 @@ class Assets {
   static String twitterIcon = "assets/icons/twitter.svg";
   static String deleteIcon = "assets/icons/delete.svg";
   static String coinIcon = "assets/icons/coin.svg";
+  static String filterIcon = "assets/icons/filter.svg";
+  static String rewardCoin = "assets/icons/reward_coin.svg";
+  static String drawer = "assets/icons/drawer.svg";
+  static String cart = "assets/icons/cart.svg";
+  static String notoCoin = "assets/icons/noto_coin.svg";
+  static String truck = "assets/icons/truck.svg";
+
 
 
   static String emailPic = "assets/images/email.svg";
   static String passwordPic = "assets/images/password.svg";
   static String completeProfilePic = "assets/images/complete_profile.svg";
+  static String rewardBg = "assets/images/bg.png";
+  static String tooltip = "assets/images/tooltip.png";
+  static String tooltipText = "assets/images/tooltip_text.png";
+  // static String rewardCoinImage = "assets/images/reward_coin_img.png";
 }

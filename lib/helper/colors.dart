@@ -23,3 +23,4 @@ Color kCartProductBg = Color(0xFFf7f7f7);
 Color kOff = Color(0xFFFF0000);
 Color kShippingCost = Color(0xFF2CCA12);
 Color kSwitchBg = Color(0xFFE7E7E7);
+Color kRewardBg = Color(0xFFFFF4E6);

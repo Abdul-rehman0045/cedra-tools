@@ -6,17 +6,66 @@ import 'package:cedratools/views/product_detail_view.dart';
 import 'package:cedratools/widgets/custom_appbar.dart';
 import 'package:cedratools/widgets/search_field.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_advanced_drawer/flutter_advanced_drawer.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 
 class HomeTab extends StatelessWidget {
-  const HomeTab({super.key});
+  HomeTab({super.key, required this.controller});
+  AdvancedDrawerController controller;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: kHomeScaffoldBg,
-      appBar: CustomAppBar(),
+      // appBar: CustomAppBar(),
+      appBar: AppBar(
+        leading: InkWell(
+          onTap: () {
+            controller.showDrawer();
+          },
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              SvgPicture.asset(Assets.drawer),
+            ],
+          ),
+        ),
+        actions: [
+          Padding(
+            padding: EdgeInsets.only(right: 20.w),
+            child: Row(
+              children: [
+                InkWell(
+                  onTap: () {},
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      SvgPicture.asset(Assets.notoCoin),
+                    ],
+                  ),
+                ),
+                SizedBox(
+                  width: 12.w,
+                ),
+                InkWell(
+                  onTap: () {},
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      SvgPicture.asset(Assets.cart),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+
       body: SingleChildScrollView(
         padding: EdgeInsets.only(bottom: 22.h),
         child: Column(
@@ -88,15 +137,13 @@ class HomeTab extends StatelessWidget {
                       height: 155.h,
                       width: 327.w,
                       clipBehavior: Clip.antiAlias,
-                      // margin: EdgeInsets.only(right: 5.w, bottom: 5.h),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(8.r),
                         // boxShadow: [
                         //   BoxShadow(
-                        //     color: Colors.grey.withOpacity(0.5),
-                        //     spreadRadius: 5,
-                        //     blurRadius: 7,
-                        //     offset: Offset(0, 3),
+                        //     color: Colors.grey.withOpacity(0.2),
+                        //     spreadRadius: 2,
+                        //     blurRadius: 2,
                         //   ),
                         // ],
                       ),
@@ -233,11 +280,11 @@ class CategoryWidget extends StatelessWidget {
         // CategoryTypesWidget(),
         heading,
         SizedBox(
-          height: 18.h,
+          height: 10.h,
         ),
         Container(
-          margin: EdgeInsets.only(left: 20.w),
-          height: 190,
+          margin: EdgeInsets.only(left: 13.w),
+          height: 195,
           width: double.infinity,
           child: ListView.separated(
               shrinkWrap: true,
@@ -245,8 +292,16 @@ class CategoryWidget extends StatelessWidget {
               itemBuilder: (context, index) {
                 return Container(
                   width: 239.w,
+                  margin: EdgeInsets.all(12.r),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(6.r),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(0.2),
+                        spreadRadius: 2,
+                        blurRadius: 2,
+                      ),
+                    ],
                   ),
                   child: GestureDetector(
                     onTap: () {
@@ -359,7 +414,7 @@ class CategoryWidget extends StatelessWidget {
               },
               separatorBuilder: (context, index) {
                 return SizedBox(
-                  width: 11.w,
+                  width: 1.w,
                 );
               },
               itemCount: 6),

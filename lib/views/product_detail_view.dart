@@ -1,9 +1,13 @@
 // ignore_for_file: must_be_immutable
 
+import 'package:cedratools/helper/assets.dart';
 import 'package:cedratools/helper/colors.dart';
 import 'package:cedratools/widgets/custom_elevated_button.dart';
+import 'package:cedratools/widgets/custom_paint.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/svg.dart';
 
 class ProductDetailView extends StatefulWidget {
   ProductDetailView({super.key});
@@ -37,7 +41,31 @@ class _ProductDetailViewState extends State<ProductDetailView> {
                       fit: BoxFit.cover,
                     ),
                   ),
-                  Text("data"),
+                  Image.asset(
+                    Assets.tooltipText,
+                  ),
+                  // Stack(
+                  //   alignment: Alignment.center,
+                  //   children: [
+                  //     Image.asset(Assets.tooltip),
+                  //     Transform.translate(
+                  //       offset: Offset(0, 5.h),
+                  //       child: Row(
+                  //         mainAxisSize: MainAxisSize.min,
+                  //         children: [
+                  //           SvgPicture.asset(Assets.truck),
+                  //           Text(
+                  //             "Free shipping",
+                  //             style: TextStyle(
+                  //               fontSize: 12.sp,
+                  //               fontWeight: FontWeight.w500,
+                  //             ),
+                  //           ),
+                  //         ],
+                  //       ),
+                  //     ),
+                  //   ],
+                  // ),
                   SizedBox(
                     height: 12.h,
                   ),
@@ -332,7 +360,6 @@ class _ProductDetailViewState extends State<ProductDetailView> {
                                     ],
                                   ),
                                 ),
-                              
                               ],
                             ),
                           ],
