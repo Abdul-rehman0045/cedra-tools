@@ -82,6 +82,7 @@ class _ForgetPasswordViewState extends State<ForgetPasswordView> {
                 backgroundColor: kPrimaryColor,
                 height: 45.w,
                 width: double.infinity,
+                      onPressed: () {},
               ),
             ],
           ),

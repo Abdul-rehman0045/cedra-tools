@@ -4,7 +4,7 @@ import 'package:cedratools/views/contact_us_view.dart';
 import 'package:cedratools/views/email_view.dart';
 import 'package:cedratools/views/filter_view.dart';
 import 'package:cedratools/views/forget_password_view.dart';
-import 'package:cedratools/views/homepage/home_view.dart';
+import 'package:cedratools/views/homepage/homepage_view.dart';
 import 'package:cedratools/views/password_view.dart';
 import 'package:cedratools/views/reward_view.dart';
 import 'package:cedratools/views/wish_list_view.dart';
@@ -31,7 +31,7 @@ class MyApp extends StatelessWidget {
           // colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
           useMaterial3: true,
         ),
-        home: HomeView(),
+        home: EmailView(),
       ),
     );
   }

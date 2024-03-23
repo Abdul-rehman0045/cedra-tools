@@ -51,6 +51,7 @@ class ContactUsView extends StatelessWidget {
                       backgroundColor: kElevatedButtonBlackBg,
                       width: 160.w,
                       height: 45.w,
+                      onPressed: () {},
                     ),
                   ),
                 ],

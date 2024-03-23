@@ -1,5 +1,6 @@
 import 'package:cedratools/helper/assets.dart';
 import 'package:cedratools/helper/colors.dart';
+import 'package:cedratools/views/password_view.dart';
 import 'package:cedratools/widgets/custom_elevated_button.dart';
 import 'package:cedratools/widgets/custom_text_from_field.dart';
 import 'package:flutter/material.dart';
@@ -56,11 +57,18 @@ class EmailView extends StatelessWidget {
                     ),
                     SizedBox(height: 33.h),
                     CustomElevatedButton(
-                      text: "Next",
-                      backgroundColor: kPrimaryColor,
-                      height: 45.w,
-                      width: double.infinity,
-                    ),
+                        text: "Next",
+                        backgroundColor: kPrimaryColor,
+                        height: 45.w,
+                        width: double.infinity,
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => PasswordView(),
+                            ),
+                          );
+                        }),
                   ],
                 ),
               ),

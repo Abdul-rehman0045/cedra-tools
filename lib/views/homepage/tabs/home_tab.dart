@@ -2,7 +2,9 @@
 
 import 'package:cedratools/helper/assets.dart';
 import 'package:cedratools/helper/colors.dart';
+import 'package:cedratools/views/cart_view.dart';
 import 'package:cedratools/views/product_detail_view.dart';
+import 'package:cedratools/views/reward_view.dart';
 import 'package:cedratools/widgets/custom_appbar.dart';
 import 'package:cedratools/widgets/search_field.dart';
 import 'package:flutter/material.dart';
@@ -38,7 +40,14 @@ class HomeTab extends StatelessWidget {
             child: Row(
               children: [
                 InkWell(
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => RewardView(),
+                      ),
+                    );
+                  },
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -51,7 +60,14 @@ class HomeTab extends StatelessWidget {
                   width: 12.w,
                 ),
                 InkWell(
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => CartView(),
+                      ),
+                    );
+                  },
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -149,8 +165,9 @@ class HomeTab extends StatelessWidget {
                       ),
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(8.r),
-                        child: Image.network(
-                          "https://e0.pxfuel.com/wallpapers/241/839/desktop-wallpaper-tools-carpentry.jpg",
+                        clipBehavior: Clip.antiAlias,
+                        child: Image.asset(
+                          Assets.slider,
                           fit: BoxFit.cover,
                         ),
                       ),
@@ -161,7 +178,7 @@ class HomeTab extends StatelessWidget {
                       width: 18.w,
                     );
                   },
-                  itemCount: 13),
+                  itemCount: 3),
             ),
             SizedBox(
               height: 29.h,
@@ -284,15 +301,16 @@ class CategoryWidget extends StatelessWidget {
         ),
         Container(
           margin: EdgeInsets.only(left: 13.w),
-          height: 195,
+          height: 250.h,
           width: double.infinity,
           child: ListView.separated(
+              padding: EdgeInsets.only(top: 10.h),
               shrinkWrap: true,
               scrollDirection: Axis.horizontal,
               itemBuilder: (context, index) {
                 return Container(
                   width: 239.w,
-                  margin: EdgeInsets.all(12.r),
+                  margin: EdgeInsets.only(bottom: 2),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(6.r),
                     boxShadow: [
@@ -313,10 +331,10 @@ class CategoryWidget extends StatelessWidget {
                       );
                     },
                     child: Column(
-                      mainAxisSize: MainAxisSize.min,
+                      mainAxisSize: MainAxisSize.max,
                       children: [
                         Expanded(
-                          flex: 3,
+                          flex: 2,
                           child: Container(
                             width: double.infinity,
                             clipBehavior: Clip.antiAlias,
@@ -414,7 +432,7 @@ class CategoryWidget extends StatelessWidget {
               },
               separatorBuilder: (context, index) {
                 return SizedBox(
-                  width: 1.w,
+                  width: 11.w,
                 );
               },
               itemCount: 6),

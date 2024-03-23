@@ -174,7 +174,13 @@ class CartView extends StatelessWidget {
                 SizedBox(
                   height: 7.h,
                 ),
-                CustomElevatedButton(text: "Checkout", backgroundColor: kPrimaryColor, height: 50.w, width: double.infinity),
+                CustomElevatedButton(
+                  text: "Checkout",
+                  backgroundColor: kPrimaryColor,
+                  height: 50.w,
+                  width: double.infinity,
+                  onPressed: () {},
+                ),
               ],
             ),
           ),

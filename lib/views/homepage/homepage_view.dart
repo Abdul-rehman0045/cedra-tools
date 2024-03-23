@@ -4,19 +4,20 @@ import 'package:cedratools/views/contact_us_view.dart';
 import 'package:cedratools/views/homepage/tabs/account_tab.dart';
 import 'package:cedratools/views/homepage/tabs/catalog_tab.dart';
 import 'package:cedratools/views/homepage/tabs/home_tab.dart';
+import 'package:cedratools/views/reward_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_advanced_drawer/flutter_advanced_drawer.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 
-class HomeView extends StatefulWidget {
-  const HomeView({super.key});
+class HomepageView extends StatefulWidget {
+  const HomepageView({super.key});
 
   @override
-  State<HomeView> createState() => _HomeViewState();
+  State<HomepageView> createState() => _HomepageViewState();
 }
 
-class _HomeViewState extends State<HomeView> {
+class _HomepageViewState extends State<HomepageView> {
   final _advancedDrawerController = AdvancedDrawerController();
   int currentIndex = 0;
   // List pages = [
@@ -91,19 +92,26 @@ class _HomeViewState extends State<HomeView> {
                   ),
                 ),
               ),
+              // ListTile(
+              //   onTap: () {},
+              //   title: Text(
+              //     'Location',
+              //     style: TextStyle(
+              //       fontSize: 16.sp,
+              //       fontWeight: FontWeight.w400,
+              //       color: Colors.white,
+              //     ),
+              //   ),
+              // ),
               ListTile(
-                onTap: () {},
-                title: Text(
-                  'Location',
-                  style: TextStyle(
-                    fontSize: 16.sp,
-                    fontWeight: FontWeight.w400,
-                    color: Colors.white,
-                  ),
-                ),
-              ),
-              ListTile(
-                onTap: () {},
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => RewardView(),
+                    ),
+                  );
+                },
                 title: Text(
                   'Get Rewards',
                   style: TextStyle(

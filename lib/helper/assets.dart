@@ -32,5 +32,5 @@ class Assets {
   static String rewardBg = "assets/images/bg.png";
   static String tooltip = "assets/images/tooltip.png";
   static String tooltipText = "assets/images/tooltip_text.png";
-  // static String rewardCoinImage = "assets/images/reward_coin_img.png";
+  static String slider = "assets/images/slider.png";
 }
