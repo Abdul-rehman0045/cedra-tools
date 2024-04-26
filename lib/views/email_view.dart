@@ -1,17 +1,19 @@
 import 'package:cedratools/helper/assets.dart';
 import 'package:cedratools/helper/colors.dart';
+import 'package:cedratools/view_models/auth_view_model.dart';
 import 'package:cedratools/views/password_view.dart';
 import 'package:cedratools/widgets/custom_elevated_button.dart';
 import 'package:cedratools/widgets/custom_text_from_field.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 
-class EmailView extends StatelessWidget {
-  const EmailView({super.key});
+class EmailView extends ConsumerWidget {
+  EmailView({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -48,6 +50,7 @@ class EmailView extends StatelessWidget {
                   children: [
                     CustomTextFromField(
                       hintText: "Enter Email",
+                      controller: ref.read(authControllerProvider).emailEditingController,
                       prefixIcon: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
@@ -57,18 +60,22 @@ class EmailView extends StatelessWidget {
                     ),
                     SizedBox(height: 33.h),
                     CustomElevatedButton(
-                        text: "Next",
-                        backgroundColor: kPrimaryColor,
-                        height: 45.w,
-                        width: double.infinity,
-                        onPressed: () {
+                      text: "Next",
+                      backgroundColor: kPrimaryColor,
+                      height: 45.w,
+                      width: double.infinity,
+                      onPressed: () async {
+                        if (ref.read(authControllerProvider).validateEmail(context)) {
+                          await ref.read(authControllerProvider).authentivateUser();
                           Navigator.push(
                             context,
                             MaterialPageRoute(
                               builder: (context) => PasswordView(),
                             ),
                           );
-                        }),
+                        }
+                      },
+                    ),
                   ],
                 ),
               ),

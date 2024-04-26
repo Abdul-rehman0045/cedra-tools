@@ -1,11 +1,15 @@
 import 'package:cedratools/helper/colors.dart';
+import 'package:cedratools/models/catalog_product_response_model.dart' as cata;
 import 'package:flutter/material.dart';
+import 'package:flutter_html/flutter_html.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class WishListProductItem extends StatelessWidget {
   const WishListProductItem({
+    this.productData,
     super.key,
   });
+  final cata.Data? productData;
 
   @override
   Widget build(BuildContext context) {
@@ -27,6 +31,7 @@ class WishListProductItem extends StatelessWidget {
             child: Container(
               clipBehavior: Clip.antiAlias,
               decoration: BoxDecoration(
+                color: Colors.white,
                 borderRadius: BorderRadius.only(
                   topLeft: Radius.circular(6.r),
                   topRight: Radius.circular(6.r),
@@ -36,8 +41,9 @@ class WishListProductItem extends StatelessWidget {
                 clipBehavior: Clip.antiAlias,
                 child: Image.network(
                   width: double.infinity,
-                  "https://hi-spec.com/cdn/shop/articles/Tools_Every_DIY_Mechanic_Needs_-_Header_image.jpg?v=1640855146",
-                  fit: BoxFit.cover,
+                  // "https://hi-spec.com/cdn/shop/articles/Tools_Every_DIY_Mechanic_Needs_-_Header_image.jpg?v=1640855146",
+                  "${productData!.image!.src}",
+                  // fit: BoxFit.cover,
                 ),
               ),
             ),
@@ -53,7 +59,7 @@ class WishListProductItem extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        "\$11,610",
+                        "\$${productData!.variants![0].price}",
                         style: TextStyle(
                           fontSize: 12.sp,
                           fontWeight: FontWeight.w600,
@@ -61,7 +67,8 @@ class WishListProductItem extends StatelessWidget {
                         ),
                       ),
                       Text(
-                        "\$11,610",
+                        // "\$11,610",
+                        "\$${productData!.variants![0].price}",
                         style: TextStyle(
                           fontSize: 14.sp,
                           fontWeight: FontWeight.w600,
@@ -74,7 +81,8 @@ class WishListProductItem extends StatelessWidget {
                     height: 10.h,
                   ),
                   Text(
-                    "12x \$870.75 without interest Launch Creader 359 Scanner 70 Brands & 29 Resetters",
+                    // "12x \$870.75 without interest Launch Creader 359 Scanner 70 Brands & 29 Resetters",
+                    "${productData!.title}",
                     style: TextStyle(
                       fontSize: 12.sp,
                       fontWeight: FontWeight.w300,

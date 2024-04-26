@@ -9,10 +9,11 @@ import 'package:cedratools/views/password_view.dart';
 import 'package:cedratools/views/reward_view.dart';
 import 'package:cedratools/views/wish_list_view.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(ProviderScope(child: MyApp()));
 }
 
 class MyApp extends StatelessWidget {

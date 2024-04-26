@@ -2,6 +2,8 @@
 
 import 'package:cedratools/helper/assets.dart';
 import 'package:cedratools/helper/colors.dart';
+import 'package:cedratools/models/catalog_product_response_model.dart';
+import 'package:cedratools/view_models/catalog_view_model.dart';
 import 'package:cedratools/views/filter_view.dart';
 import 'package:cedratools/widgets/search_field.dart';
 import 'package:cedratools/widgets/wish_list_product_item.dart';
@@ -9,9 +11,22 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 
-class CatalogTab extends StatelessWidget {
+class CatalogTab extends StatefulWidget {
   CatalogTab({super.key});
+
+  @override
+  State<CatalogTab> createState() => _CatalogTabState();
+}
+
+class _CatalogTabState extends State<CatalogTab> {
   List<String> list = <String>['Most Relevant', 'Lower Price', 'Higher Price'];
+  CatalogViewModel viewModal = CatalogViewModel();
+
+  @override
+  void initState() {
+    viewModal.getProductList();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -69,7 +84,12 @@ class CatalogTab extends StatelessWidget {
               children: [
                 IconButton(
                   onPressed: () {
-                    Navigator.push(context, MaterialPageRoute(builder: (context)=>FilterView(),),);
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => FilterView(),
+                      ),
+                    );
                   },
                   icon: SvgPicture.asset(Assets.filterIcon),
                   style: IconButton.styleFrom(
@@ -131,20 +151,26 @@ class CatalogTab extends StatelessWidget {
             SizedBox(
               height: 22.h,
             ),
-            GridView.count(
-              shrinkWrap: true,
-              physics: NeverScrollableScrollPhysics(),
-              crossAxisSpacing: 20.h,
-              mainAxisSpacing: 32.h,
-              childAspectRatio: 0.7,
-              crossAxisCount: 2,
-              children: List.generate(
-                23,
-                (index) {
-                  return WishListProductItem();
-                },
-              ),
-            ),
+            viewModal.catalogData == null
+                ? Container()
+                : GridView.count(
+                    shrinkWrap: true,
+                    physics: NeverScrollableScrollPhysics(),
+                    crossAxisSpacing: 20.h,
+                    mainAxisSpacing: 32.h,
+                    childAspectRatio: 0.7,
+                    crossAxisCount: 2,
+                    children: List.generate(
+                      viewModal.catalogData!.data!.length,
+                      // 23,
+                      (index) {
+                        Data productData = viewModal.catalogData!.data![index];
+                        return WishListProductItem(
+                          productData: productData,
+                        );
+                      },
+                    ),
+                  ),
             SizedBox(
               height: 30.h,
             ),
