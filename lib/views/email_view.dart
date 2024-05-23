@@ -1,7 +1,7 @@
+import 'package:cedratools/helper/app_routes.dart';
 import 'package:cedratools/helper/assets.dart';
 import 'package:cedratools/helper/colors.dart';
 import 'package:cedratools/view_models/auth_view_model.dart';
-import 'package:cedratools/views/password_view.dart';
 import 'package:cedratools/widgets/custom_elevated_button.dart';
 import 'package:cedratools/widgets/custom_text_from_field.dart';
 import 'package:flutter/material.dart';
@@ -65,13 +65,12 @@ class EmailView extends ConsumerWidget {
                       height: 45.w,
                       width: double.infinity,
                       onPressed: () async {
+                        print("${ref.read(authControllerProvider).emailEditingController}");
                         if (ref.read(authControllerProvider).validateEmail(context)) {
-                          await ref.read(authControllerProvider).authentivateUser();
-                          Navigator.push(
+                          await ref.read(authControllerProvider).authentivateUser(ref: ref);
+                          Navigator.pushNamed(
                             context,
-                            MaterialPageRoute(
-                              builder: (context) => PasswordView(),
-                            ),
+                            AppRoutes.PASSWORD_VIEW,
                           );
                         }
                       },

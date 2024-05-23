@@ -1,3 +1,5 @@
+import 'package:cedratools/helper/app_fonts.dart';
+import 'package:cedratools/helper/app_routes.dart';
 import 'package:cedratools/views/cart_view.dart';
 import 'package:cedratools/views/complete_profile_view.dart';
 import 'package:cedratools/views/contact_us_view.dart';
@@ -8,6 +10,7 @@ import 'package:cedratools/views/homepage/homepage_view.dart';
 import 'package:cedratools/views/password_view.dart';
 import 'package:cedratools/views/reward_view.dart';
 import 'package:cedratools/views/wish_list_view.dart';
+import 'package:cedratools/widgets/loader.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -28,11 +31,21 @@ class MyApp extends StatelessWidget {
       splitScreenMode: true,
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
+        onGenerateRoute: AppRoutes.getRoute,
+        builder: (context, child) {
+          return Loader(
+            child: MediaQuery(
+              data: MediaQuery.of(context).copyWith(textScaleFactor: 1.0),
+              child: child!,
+            ),
+          );
+        },
         theme: ThemeData(
-          // colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+          fontFamily: AppFonts.MONTSERRAT,
           useMaterial3: true,
         ),
-        home: EmailView(),
+        // home: EmailView(),
+        initialRoute: AppRoutes.EMAIL_VIEW,
       ),
     );
   }

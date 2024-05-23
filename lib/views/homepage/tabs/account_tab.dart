@@ -1,3 +1,4 @@
+import 'package:cedratools/helper/app_routes.dart';
 import 'package:cedratools/helper/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -28,7 +29,9 @@ class AccountTab extends StatelessWidget {
             ),
           ),
           ListTile(
-            onTap: () {},
+            onTap: () {
+              Navigator.pushNamed(context, AppRoutes.CHANGE_PASSWORD_VIEW);
+            },
             title: Text(
               "Change Password",
               style: TextStyle(

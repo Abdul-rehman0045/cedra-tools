@@ -1,25 +1,26 @@
 import 'dart:developer';
 
+import 'package:cedratools/helper/app_routes.dart';
 import 'package:cedratools/helper/base_helper.dart';
 import 'package:cedratools/models/authenticate_user_api_response_model.dart';
 import 'package:cedratools/models/response_model.dart';
 import 'package:cedratools/networking/api_paths.dart';
 import 'package:cedratools/networking/api_services.dart';
+import 'package:cedratools/view_models/loader_view_model.dart';
+import 'package:cedratools/views/homepage/homepage_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-final authControllerProvider = ChangeNotifierProvider<AuthViewModel>((ref) {
-  return AuthViewModel();
-});
+final authControllerProvider = ChangeNotifierProvider<AuthViewModel>((ref) => AuthViewModel());
 
 class AuthViewModel extends ChangeNotifier {
   TextEditingController emailEditingController = TextEditingController();
   TextEditingController passwordEditingController = TextEditingController();
   TextEditingController confirmPasswordEditingController = TextEditingController();
-  bool isPasswordVisible = true;
-  bool isConfirmPasswordVisible = true;
+  bool isPasswordVisible = false;
+  bool isConfirmPasswordVisible = false;
   AuthenticateUserApiResponseModel? authenticateUser;
-  bool? isNewUser;
+  bool? isPasswordSet;
 
   void getPasswordVisible() {
     isPasswordVisible = !isPasswordVisible;
@@ -98,34 +99,58 @@ class AuthViewModel extends ChangeNotifier {
     return true;
   }
 
-  void login() async {
+  void login({WidgetRef? ref, BuildContext? context}) async {
     var map = {
       "email": emailEditingController.text.trim(),
       "password": passwordEditingController.text.trim(),
     };
-    ResponseModel response = await ApiServices.request(ApiPaths.login, method: RequestMethod.POST, data: map);
+    try {
+      ref!.read(loaderViewModel).showLoader();
+      ResponseModel response = await ApiServices.request(ApiPaths.login, method: RequestMethod.POST, data: map);
+      if (response.status == 200) {
+        Navigator.pushNamedAndRemoveUntil(context!, AppRoutes.HOME_PAGE_VIEW, (route) => false);
+      }
+    } catch (e) {
+    } finally {
+      ref!.read(loaderViewModel).hideLoader();
+    }
   }
 
-  void generatePassword() async {
+  void generatePassword({WidgetRef? ref, BuildContext? context}) async {
     var map = {
       "email": emailEditingController.text.trim(),
       "password": passwordEditingController.text.trim(),
     };
-    ResponseModel response = await ApiServices.request(ApiPaths.generatePassword, method: RequestMethod.POST, data: map);
+    try {
+      ref!.read(loaderViewModel).showLoader();
+      ResponseModel response = await ApiServices.request(ApiPaths.generatePassword, method: RequestMethod.POST, data: map);
+      if (response.status == 200) {
+        Navigator.pushNamed(context!, AppRoutes.COMPLETE_PROFILE_VIEW);
+      }
+    } catch (e) {
+    } finally {
+      ref!.read(loaderViewModel).hideLoader();
+    }
   }
 
-  Future authentivateUser() async {
+  Future authentivateUser({WidgetRef? ref}) async {
     var map = {
       "email": emailEditingController.text.trim(),
     };
-    ResponseModel response = await ApiServices.request(
-      ApiPaths.authenticateUser,
-      method: RequestMethod.POST,
-      data: map,
-    );
-    if (response.data != null) {
-      authenticateUser = AuthenticateUserApiResponseModel.fromJson(response.data);
-      isNewUser = authenticateUser!.isPasswordSet;
+    try {
+      ref!.read(loaderViewModel).showLoader();
+      ResponseModel response = await ApiServices.request(
+        ApiPaths.authenticateUser,
+        method: RequestMethod.POST,
+        data: map,
+      );
+      if (response.data != null) {
+        authenticateUser = AuthenticateUserApiResponseModel.fromJson(response.data);
+        isPasswordSet = authenticateUser!.isPasswordSet;
+      }
+    } catch (e) {
+    } finally {
+      ref!.read(loaderViewModel).hideLoader();
     }
   }
 }

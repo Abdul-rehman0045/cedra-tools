@@ -42,7 +42,7 @@ class WishListProductItem extends StatelessWidget {
                 child: Image.network(
                   width: double.infinity,
                   // "https://hi-spec.com/cdn/shop/articles/Tools_Every_DIY_Mechanic_Needs_-_Header_image.jpg?v=1640855146",
-                  "${productData!.image!.src}",
+                  "${productData?.image?.src}",
                   // fit: BoxFit.cover,
                 ),
               ),
@@ -54,28 +54,24 @@ class WishListProductItem extends StatelessWidget {
               color: kProductBg,
               padding: EdgeInsets.all(11.r),
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        "\$${productData!.variants![0].price}",
-                        style: TextStyle(
-                          fontSize: 12.sp,
-                          fontWeight: FontWeight.w600,
-                          color: kProductGreyText,
-                        ),
-                      ),
-                      Text(
-                        // "\$11,610",
-                        "\$${productData!.variants![0].price}",
-                        style: TextStyle(
-                          fontSize: 14.sp,
-                          fontWeight: FontWeight.w600,
-                          color: kInactiveChip,
-                        ),
-                      ),
-                    ],
+                  Text(
+                    "\$${productData!.variants![0].price}",
+                    style: TextStyle(
+                      fontSize: 12.sp,
+                      fontWeight: FontWeight.w600,
+                      color: kProductGreyText,
+                    ),
+                  ),
+                  Text(
+                    // "\$11,610",
+                    "\$${productData!.variants![0].price}",
+                    style: TextStyle(
+                      fontSize: 14.sp,
+                      fontWeight: FontWeight.w600,
+                      color: kInactiveChip,
+                    ),
                   ),
                   SizedBox(
                     height: 10.h,
@@ -83,6 +79,8 @@ class WishListProductItem extends StatelessWidget {
                   Text(
                     // "12x \$870.75 without interest Launch Creader 359 Scanner 70 Brands & 29 Resetters",
                     "${productData!.title}",
+                    maxLines: 3,
+                    overflow: TextOverflow.ellipsis,
                     style: TextStyle(
                       fontSize: 12.sp,
                       fontWeight: FontWeight.w300,

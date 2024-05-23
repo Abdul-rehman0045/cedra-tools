@@ -1,5 +1,6 @@
 // ignore_for_file: must_be_immutable
 
+import 'package:cedratools/helper/app_routes.dart';
 import 'package:cedratools/helper/assets.dart';
 import 'package:cedratools/helper/colors.dart';
 import 'package:cedratools/views/cart_view.dart';
@@ -41,11 +42,9 @@ class HomeTab extends StatelessWidget {
               children: [
                 InkWell(
                   onTap: () {
-                    Navigator.push(
+                    Navigator.pushNamed(
                       context,
-                      MaterialPageRoute(
-                        builder: (context) => RewardView(),
-                      ),
+                      AppRoutes.REWARD_VIEW,
                     );
                   },
                   child: Column(

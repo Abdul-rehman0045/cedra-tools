@@ -1,5 +1,7 @@
 // ignore_for_file: must_be_immutable
 
+import 'dart:developer';
+
 import 'package:cedratools/helper/assets.dart';
 import 'package:cedratools/helper/colors.dart';
 import 'package:cedratools/view_models/auth_view_model.dart';
@@ -54,7 +56,7 @@ class PasswordView extends ConsumerWidget {
                     CustomTextFromField(
                       hintText: "Password",
                       controller: readRefrence.passwordEditingController,
-                      obscureText: ref.watch(authControllerProvider).isPasswordVisible,
+                      obscureText: !ref.watch(authControllerProvider).isPasswordVisible,
                       maxLines: 1,
                       prefixIcon: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -79,11 +81,11 @@ class PasswordView extends ConsumerWidget {
                       ),
                     ),
                     SizedBox(height: 31.h),
-                    if (readRefrence.isNewUser == false) ...[
+                    if (readRefrence.isPasswordSet == false) ...[
                       CustomTextFromField(
                         hintText: "Confirm Password",
                         controller: readRefrence.confirmPasswordEditingController,
-                        obscureText: ref.watch(authControllerProvider).isConfirmPasswordVisible,
+                        obscureText: !ref.watch(authControllerProvider).isConfirmPasswordVisible,
                         maxLines: 1,
                         prefixIcon: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
@@ -115,25 +117,15 @@ class PasswordView extends ConsumerWidget {
                       height: 45.w,
                       width: double.infinity,
                       onPressed: () {
-                        if (readRefrence.isNewUser == true) {
+                        if (readRefrence.isPasswordSet == true) {
+                          log("--old user-->");
                           if (readRefrence.validatePassword(context)) {
-                            readRefrence.login();
-                            // Navigator.push(
-                            //   context,
-                            //   MaterialPageRoute(
-                            //     builder: (context) => CompleteProfileView(),
-                            //   ),
-                            // );
+                            readRefrence.login(ref: ref, context: context);
                           }
                         } else {
+                          log("--new user-->");
                           if (readRefrence.validatePassword(context) && readRefrence.validateConfirmPassword(context)) {
-                            readRefrence.generatePassword();
-                            // Navigator.push(
-                            //   context,
-                            //   MaterialPageRoute(
-                            //     builder: (context) => CompleteProfileView(),
-                            //   ),
-                            // );
+                            readRefrence.generatePassword(ref: ref, context: context);
                           }
                         }
                       },

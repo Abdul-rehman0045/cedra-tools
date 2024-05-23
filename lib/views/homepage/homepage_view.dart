@@ -1,3 +1,4 @@
+import 'package:cedratools/helper/app_routes.dart';
 import 'package:cedratools/helper/assets.dart';
 import 'package:cedratools/helper/colors.dart';
 import 'package:cedratools/views/contact_us_view.dart';
@@ -105,12 +106,11 @@ class _HomepageViewState extends State<HomepageView> {
               // ),
               ListTile(
                 onTap: () {
-                  Navigator.push(
+                  Navigator.pushNamed(
                     context,
-                    MaterialPageRoute(
-                      builder: (context) => RewardView(),
-                    ),
+                    AppRoutes.REWARD_VIEW,
                   );
+                  _advancedDrawerController.hideDrawer();
                 },
                 title: Text(
                   'Get Rewards',

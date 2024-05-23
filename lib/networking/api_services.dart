@@ -16,7 +16,7 @@ class ApiServices {
       ApiConfig().dio.options.method = describeEnum(method);
       ApiConfig().dio.options.headers[HttpHeaders.authorizationHeader] =
           // 'Bearer ' + box.get("token", defaultValue: "");
-          'Bearer' + "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwiZW1haWwiOiJyYWJhQGdtYWlsLmNvbSIsImlhdCI6MTcxNDEyODQ3MSwiZXhwIjoxNzE2NzIwNDcxfQ.iC7rAQn_u52dktLHbHAUUbSaGM-wJ9vEoQjOdI0Q9Lk";
+          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6OCwiZW1haWwiOiJqb2huYUBnbWFpbC5jb20iLCJpYXQiOjE3MTY0NTY4NDQsImV4cCI6MTcxOTA0ODg0NH0.aZF6gE8zz1HI3Y52N5WrjlH3Znso8Kpt1ode3hjVm6Q";
       Response response = await ApiConfig().dio.request(path, data: data, queryParameters: queryParameters);
       log(response.data.toString());
       if (response.statusCode! >= 200 && response.statusCode! < 300) {
