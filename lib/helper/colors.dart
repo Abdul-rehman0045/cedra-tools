@@ -24,3 +24,4 @@ Color kOff = Color(0xFFFF0000);
 Color kShippingCost = Color(0xFF2CCA12);
 Color kSwitchBg = Color(0xFFE7E7E7);
 Color kRewardBg = Color(0xFFFFF4E6);
+Color kBadgeBg = Color(0xFFD65B5B);

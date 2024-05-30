@@ -1,13 +1,24 @@
-import 'package:cedratools/helper/app_routes.dart';
-import 'package:cedratools/helper/colors.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
+// ignore_for_file: must_be_immutable
 
-class AccountTab extends StatelessWidget {
-  const AccountTab({super.key});
+import 'package:cedratools/helper/app_routes.dart';
+import 'package:cedratools/helper/base_helper.dart';
+import 'package:cedratools/helper/colors.dart';
+import 'package:cedratools/view_models/locale_viewmodel.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
+enum SelectLanguage { english, spanish }
+
+class AccountTab extends ConsumerWidget {
+  AccountTab({super.key});
+  SelectLanguage? language = SelectLanguage.english;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    var localeRefWatch = ref.watch(localelProvider);
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -21,6 +32,7 @@ class AccountTab extends StatelessWidget {
             onTap: () {},
             title: Text(
               "Edit Profile",
+              // "${AppLocalizations.of(BaseHelper.navState.currentContext!)!.what_was_the_first_sport}",
               style: TextStyle(
                 fontSize: 20.sp,
                 fontWeight: FontWeight.w500,
@@ -51,6 +63,80 @@ class AccountTab extends StatelessWidget {
                 color: kPrimaryColor,
               ),
             ),
+          ),
+          ListTile(
+            onTap: () {
+              showBottomSheet(
+                  elevation: 3.0,
+                  backgroundColor: Colors.white60,
+                  context: context,
+                  builder: (context) {
+                    return Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        SizedBox(
+                          height: 16.h,
+                        ),
+                        Text(
+                          "Choose Language",
+                          style: TextStyle(
+                            fontSize: 16.sp,
+                            fontWeight: FontWeight.w600,
+                            color: kPrimaryColor,
+                          ),
+                        ),
+                        SizedBox(
+                          height: 16.h,
+                        ),
+                        ListTile(
+                          title: Text('English'),
+                          leading: Radio<SelectLanguage>(
+                            fillColor: MaterialStateColor.resolveWith((states) {
+                              if (states.contains(MaterialState.selected)) {
+                                return kPrimaryColor;
+                              }
+                              return kInactiveTabIcon;
+                            }),
+                            value: SelectLanguage.english,
+                            groupValue: language,
+                            onChanged: (SelectLanguage? value) {
+                              language = value;
+                              localeRefWatch.setLocale(Locale("en"));
+                              Navigator.pop(context);
+                            },
+                          ),
+                        ),
+                        ListTile(
+                          title: Text('Spanish'),
+                          leading: Radio<SelectLanguage>(
+                            fillColor: MaterialStateColor.resolveWith((states) {
+                              if (states.contains(MaterialState.selected)) {
+                                return kPrimaryColor;
+                              }
+                              return kInactiveTabIcon;
+                            }),
+                            value: SelectLanguage.spanish,
+                            groupValue: language,
+                            onChanged: (SelectLanguage? value) {
+                              language = value;
+                              localeRefWatch.setLocale(Locale("es"));
+                              Navigator.pop(context);
+                            },
+                          ),
+                        ),
+                      ],
+                    );
+                  });
+            },
+            title: Text(
+              "Language",
+              style: TextStyle(
+                fontSize: 20.sp,
+                fontWeight: FontWeight.w500,
+                color: kPrimaryColor,
+              ),
+            ),
+            subtitle: Text("${language!.name}"),
           ),
         ],
       ),

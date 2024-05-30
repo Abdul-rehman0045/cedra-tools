@@ -2,24 +2,26 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class CustomElevatedButton extends StatelessWidget {
-  const CustomElevatedButton({
+  CustomElevatedButton({
     super.key,
     required this.text,
     required this.backgroundColor,
     required this.height,
     required this.width,
     required this.onPressed,
+    this.fontSize,
   });
   final String text;
   final Color backgroundColor;
   final double height;
   final double width;
-  final  onPressed;
+  final onPressed;
+  double? fontSize;
 
   @override
   Widget build(BuildContext context) {
     return ElevatedButton(
-      onPressed:onPressed,
+      onPressed: onPressed,
       style: ElevatedButton.styleFrom(
         elevation: 0,
         backgroundColor: backgroundColor,
@@ -33,7 +35,7 @@ class CustomElevatedButton extends StatelessWidget {
       child: Text(
         "$text",
         style: TextStyle(
-          fontSize: 20.sp,
+          fontSize: fontSize ?? 20.sp,
           fontWeight: FontWeight.w600,
           color: Colors.white,
         ),

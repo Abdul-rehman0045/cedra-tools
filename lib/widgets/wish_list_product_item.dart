@@ -1,5 +1,5 @@
 import 'package:cedratools/helper/colors.dart';
-import 'package:cedratools/models/catalog_product_response_model.dart' as cata;
+import 'package:cedratools/models/catalog_response_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -9,7 +9,7 @@ class WishListProductItem extends StatelessWidget {
     this.productData,
     super.key,
   });
-  final cata.Data? productData;
+  final CatalogProductList? productData;
 
   @override
   Widget build(BuildContext context) {
@@ -42,7 +42,7 @@ class WishListProductItem extends StatelessWidget {
                 child: Image.network(
                   width: double.infinity,
                   // "https://hi-spec.com/cdn/shop/articles/Tools_Every_DIY_Mechanic_Needs_-_Header_image.jpg?v=1640855146",
-                  "${productData?.image?.src}",
+                  "${productData?.image?.src ?? "https://storage.googleapis.com/proudcity/mebanenc/uploads/2021/03/placeholder-image.png"}",
                   // fit: BoxFit.cover,
                 ),
               ),

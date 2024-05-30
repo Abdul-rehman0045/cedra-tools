@@ -3,6 +3,7 @@
 import 'dart:developer';
 import 'dart:io';
 
+import 'package:cedratools/main.dart';
 import 'package:cedratools/models/response_model.dart';
 import 'package:cedratools/networking/api_config.dart';
 import 'package:dio/dio.dart';
@@ -14,9 +15,7 @@ class ApiServices {
   static Future<ResponseModel> request(String path, {required RequestMethod method, data, queryParameters}) async {
     try {
       ApiConfig().dio.options.method = describeEnum(method);
-      ApiConfig().dio.options.headers[HttpHeaders.authorizationHeader] =
-          // 'Bearer ' + box.get("token", defaultValue: "");
-          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6OCwiZW1haWwiOiJqb2huYUBnbWFpbC5jb20iLCJpYXQiOjE3MTY0NTY4NDQsImV4cCI6MTcxOTA0ODg0NH0.aZF6gE8zz1HI3Y52N5WrjlH3Znso8Kpt1ode3hjVm6Q";
+      ApiConfig().dio.options.headers[HttpHeaders.authorizationHeader] = box.get("token", defaultValue: "");
       Response response = await ApiConfig().dio.request(path, data: data, queryParameters: queryParameters);
       log(response.data.toString());
       if (response.statusCode! >= 200 && response.statusCode! < 300) {

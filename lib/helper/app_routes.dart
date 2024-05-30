@@ -1,8 +1,10 @@
+import 'package:cedratools/views/cart_view.dart';
 import 'package:cedratools/views/change_password_view.dart';
 import 'package:cedratools/views/complete_profile_view.dart';
 import 'package:cedratools/views/email_view.dart';
 import 'package:cedratools/views/homepage/homepage_view.dart';
 import 'package:cedratools/views/password_view.dart';
+import 'package:cedratools/views/product_detail_view.dart';
 import 'package:cedratools/views/reward_view.dart';
 import 'package:flutter/material.dart';
 
@@ -14,6 +16,8 @@ class AppRoutes {
   static const String COMPLETE_PROFILE_VIEW = "/complete_profile_view";
   static const String CHANGE_PASSWORD_VIEW = "/change_password_view";
   static const String REWARD_VIEW = "/reward_view";
+  static const String PRODUCT_DETAIL_VIEW = "/product_detail_view";
+  static const String CART_VIEW = "/cart_view";
 
   static Route? getRoute(RouteSettings routeSettings) {
     switch (routeSettings.name) {
@@ -57,6 +61,18 @@ class AppRoutes {
         {
           return MaterialPageRoute(builder: (_) {
             return RewardView();
+          });
+        }
+      case PRODUCT_DETAIL_VIEW:
+        {
+          return MaterialPageRoute(builder: (_) {
+            return ProductDetailView(map: routeSettings.arguments);
+          });
+        }
+      case CART_VIEW:
+        {
+          return MaterialPageRoute(builder: (_) {
+            return CartView();
           });
         }
       default:

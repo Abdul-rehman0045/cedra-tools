@@ -2,7 +2,9 @@ import 'dart:developer';
 
 import 'package:cedratools/helper/app_routes.dart';
 import 'package:cedratools/helper/base_helper.dart';
+import 'package:cedratools/main.dart';
 import 'package:cedratools/models/authenticate_user_api_response_model.dart';
+import 'package:cedratools/models/login_response_model.dart';
 import 'package:cedratools/models/response_model.dart';
 import 'package:cedratools/networking/api_paths.dart';
 import 'package:cedratools/networking/api_services.dart';
@@ -108,6 +110,8 @@ class AuthViewModel extends ChangeNotifier {
       ref!.read(loaderViewModel).showLoader();
       ResponseModel response = await ApiServices.request(ApiPaths.login, method: RequestMethod.POST, data: map);
       if (response.status == 200) {
+        LoginResponseModel loginResponse = LoginResponseModel.fromJson(response.data);
+        box.put("token", loginResponse.userExist!.token);
         Navigator.pushNamedAndRemoveUntil(context!, AppRoutes.HOME_PAGE_VIEW, (route) => false);
       }
     } catch (e) {

@@ -2,34 +2,40 @@
 
 import 'package:cedratools/helper/assets.dart';
 import 'package:cedratools/helper/colors.dart';
-import 'package:cedratools/models/catalog_product_response_model.dart';
+import 'package:cedratools/models/catalog_response_model.dart';
 import 'package:cedratools/view_models/catalog_view_model.dart';
 import 'package:cedratools/views/filter_view.dart';
 import 'package:cedratools/widgets/search_field.dart';
 import 'package:cedratools/widgets/wish_list_product_item.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 
-class CatalogTab extends StatefulWidget {
+class CatalogTab extends ConsumerStatefulWidget {
   CatalogTab({super.key});
 
   @override
-  State<CatalogTab> createState() => _CatalogTabState();
+  CatalogTabState createState() => CatalogTabState();
 }
 
-class _CatalogTabState extends State<CatalogTab> {
+class CatalogTabState extends ConsumerState<CatalogTab> {
   List<String> list = <String>['Most Relevant', 'Lower Price', 'Higher Price'];
-  CatalogViewModel viewModal = CatalogViewModel();
+  late CatalogViewModel refCatalogRead;
+  late CatalogViewModel refCatalogWatch;
 
   @override
   void initState() {
-    viewModal.getProductList();
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      ref.read(cataLogViewModel).getProductList(ref);
+    });
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+    refCatalogRead = ref.read(cataLogViewModel);
+    refCatalogWatch = ref.watch(cataLogViewModel);
     return Scaffold(
       backgroundColor: kHomeScaffoldBg,
       appBar: AppBar(
@@ -151,7 +157,7 @@ class _CatalogTabState extends State<CatalogTab> {
             SizedBox(
               height: 22.h,
             ),
-            viewModal.catalogData == null
+            refCatalogWatch.catalogresponse == null
                 ? Container()
                 : GridView.count(
                     shrinkWrap: true,
@@ -161,10 +167,10 @@ class _CatalogTabState extends State<CatalogTab> {
                     childAspectRatio: 0.7,
                     crossAxisCount: 2,
                     children: List.generate(
-                      viewModal.catalogData!.data!.length,
+                      refCatalogWatch.catalogresponse!.catalogProductList!.length,
                       // 23,
                       (index) {
-                        Data productData = viewModal.catalogData!.data![index];
+                        CatalogProductList productData = refCatalogWatch.catalogresponse!.catalogProductList![index];
                         return WishListProductItem(
                           productData: productData,
                         );

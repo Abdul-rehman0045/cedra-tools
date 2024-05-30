@@ -1,34 +1,25 @@
-class CatalogProductResponseModel {
-  // int? status;
-  List<Data>? data;
-  // String? message;
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-  // CatalogProductResponseModal({this.status, this.data, this.message});
+// var catalogProductListRef = ChangeNotifierProvider((ref) => CatalogProductList());
 
-  CatalogProductResponseModel.fromJson(json) {
-    // status = json['status'];
+class CatalogResponseViewModel {
+  List<CatalogProductList>? catalogProductList;
+
+  CatalogResponseViewModel({this.catalogProductList});
+
+  CatalogResponseViewModel.fromJson(json) {
     if (json != null) {
-      data = <Data>[];
+      catalogProductList = <CatalogProductList>[];
       json.forEach((v) {
-        data!.add(new Data.fromJson(v));
+        catalogProductList!.add(new CatalogProductList.fromJson(v));
       });
     }
-    // message = json['message'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    // data['status'] = this.status;
-    if (this.data != null) {
-      data['data'] = this.data!.map((v) => v.toJson()).toList();
-    }
-    // data['message'] = this.message;
-    return data;
   }
 }
 
-class Data {
-  int? id;
+class CatalogProductList {
+  var id;
   String? title;
   String? bodyHtml;
   String? vendor;
@@ -44,10 +35,11 @@ class Data {
   String? adminGraphqlApiId;
   List<Variants>? variants;
   List<Options>? options;
-  List<Image>? images;
-  Image? image;
+  List<Images>? images;
+  Images? image;
+  int userSelectedQuantity = 0;
 
-  Data(
+  CatalogProductList(
       {this.id,
       this.title,
       this.bodyHtml,
@@ -67,7 +59,7 @@ class Data {
       this.images,
       this.image});
 
-  Data.fromJson(Map<String, dynamic> json) {
+  CatalogProductList.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     title = json['title'];
     bodyHtml = json['body_html'];
@@ -95,12 +87,12 @@ class Data {
       });
     }
     if (json['images'] != null) {
-      images = <Image>[];
+      images = <Images>[];
       json['images'].forEach((v) {
-        images!.add(new Image.fromJson(v));
+        images!.add(new Images.fromJson(v));
       });
     }
-    image = json['image'] != null ? new Image.fromJson(json['image']) : null;
+    image = json['image'] != null ? new Images.fromJson(json['image']) : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -136,12 +128,12 @@ class Data {
 }
 
 class Variants {
-  int? id;
-  int? productId;
+  var id;
+  var productId;
   String? title;
   String? price;
   String? sku;
-  int? position;
+  var position;
   String? inventoryPolicy;
   String? compareAtPrice;
   String? fulfillmentService;
@@ -153,12 +145,12 @@ class Variants {
   String? updatedAt;
   bool? taxable;
   String? barcode;
-  int? grams;
+  var grams;
   var weight;
   String? weightUnit;
-  int? inventoryItemId;
-  int? inventoryQuantity;
-  int? oldInventoryQuantity;
+  var inventoryItemId;
+  var inventoryQuantity;
+  var oldInventoryQuantity;
   bool? requiresShipping;
   String? adminGraphqlApiId;
   var imageId;
@@ -253,10 +245,10 @@ class Variants {
 }
 
 class Options {
-  int? id;
-  int? productId;
+  var id;
+  var productId;
   String? name;
-  int? position;
+  var position;
   List<String>? values;
 
   Options({this.id, this.productId, this.name, this.position, this.values});
@@ -280,76 +272,21 @@ class Options {
   }
 }
 
-// class Images {
-//   int? id;
-//   String? alt;
-//   int? position;
-//   int? productId;
-//   String? createdAt;
-//   String? updatedAt;
-//   String? adminGraphqlApiId;
-//   int? width;
-//   int? height;
-//   String? src;
-//   var variantIds;
-
-//   Images({this.id, this.alt, this.position, this.productId, this.createdAt, this.updatedAt, this.adminGraphqlApiId, this.width, this.height, this.src, this.variantIds});
-
-//   Images.fromJson(Map<String, dynamic> json) {
-//     id = json['id'];
-//     alt = json['alt'];
-//     position = json['position'];
-//     productId = json['product_id'];
-//     createdAt = json['created_at'];
-//     updatedAt = json['updated_at'];
-//     adminGraphqlApiId = json['admin_graphql_api_id'];
-//     width = json['width'];
-//     height = json['height'];
-//     src = json['src'];
-//     variantIds = json['variant_ids'];
-//     // if (json['variant_ids'] != null) {
-//     //   variantIds = <Null>[];
-//     // json['variant_ids'].forEach((v) {
-//     //   variantIds!.add(new Null.fromJson(v));
-//     // });
-//     // }
-//   }
-
-//   Map<String, dynamic> toJson() {
-//     final Map<String, dynamic> data = new Map<String, dynamic>();
-//     data['id'] = this.id;
-//     data['alt'] = this.alt;
-//     data['position'] = this.position;
-//     data['product_id'] = this.productId;
-//     data['created_at'] = this.createdAt;
-//     data['updated_at'] = this.updatedAt;
-//     data['admin_graphql_api_id'] = this.adminGraphqlApiId;
-//     data['width'] = this.width;
-//     data['height'] = this.height;
-//     data['src'] = this.src;
-//     if (this.variantIds != null) {
-//       data['variant_ids'] = this.variantIds!.map((v) => v.toJson()).toList();
-//     }
-//     return data;
-//   }
-// }
-
-class Image {
-  int? id;
-  var alt;
-  int? position;
-  int? productId;
+class Images {
+  var id;
+  String? alt;
+  var position;
+  var productId;
   String? createdAt;
   String? updatedAt;
   String? adminGraphqlApiId;
-  int? width;
-  int? height;
+  var width;
+  var height;
   String? src;
-  var variantIds;
 
-  Image({this.id, this.alt, this.position, this.productId, this.createdAt, this.updatedAt, this.adminGraphqlApiId, this.width, this.height, this.src, this.variantIds});
+  Images({this.id, this.alt, this.position, this.productId, this.createdAt, this.updatedAt, this.adminGraphqlApiId, this.width, this.height, this.src});
 
-  Image.fromJson(Map<String, dynamic> json) {
+  Images.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     alt = json['alt'];
     position = json['position'];
@@ -360,13 +297,6 @@ class Image {
     width = json['width'];
     height = json['height'];
     src = json['src'];
-    variantIds = json['variant_ids'];
-    // if (json['variant_ids'] != null) {
-    //   variantIds = <Null>[];
-    //   json['variant_ids'].forEach((v) {
-    //     variantIds!.add(new Null.fromJson(v));
-    //   });
-    // }
   }
 
   Map<String, dynamic> toJson() {
@@ -381,10 +311,6 @@ class Image {
     data['width'] = this.width;
     data['height'] = this.height;
     data['src'] = this.src;
-    data['variant_ids'] = this.variantIds;
-    // if (this.variantIds != null) {
-    //   data['variant_ids'] = this.variantIds!.map((v) => v.toJson()).toList();
-    // }
     return data;
   }
 }

@@ -1,3 +1,4 @@
+import 'package:cedratools/models/catalog_response_model.dart';
 import 'package:cedratools/models/claim_status_response_model.dart';
 import 'package:cedratools/models/response_model.dart';
 import 'package:cedratools/networking/api_paths.dart';
@@ -10,6 +11,8 @@ var homeViewModel = ChangeNotifierProvider<HomeViewModel>((ref) => HomeViewModel
 
 class HomeViewModel extends ChangeNotifier {
   ClaimStatusResponseModel? claimStatusObj;
+  CatalogResponseViewModel? catalogresponse;
+  
   Future checkClaimStatus() async {
     try {
       ResponseModel response = await ApiServices.request(ApiPaths.chaeckClaimStatus, method: RequestMethod.GET);
@@ -31,4 +34,18 @@ class HomeViewModel extends ChangeNotifier {
       ref.read(loaderViewModel).hideLoader();
     }
   }
+
+
+  void getProductList(WidgetRef ref) async {
+    try {
+    ref.watch(loaderViewModel).showLoader();
+    ResponseModel response = await ApiServices.request(ApiPaths.productGetList, method: RequestMethod.GET);
+    catalogresponse = CatalogResponseViewModel.fromJson(response.data);
+    notifyListeners();
+    } catch (e) {
+    } finally {
+    ref.watch(loaderViewModel).hideLoader();
+    }
+  }
+
 }

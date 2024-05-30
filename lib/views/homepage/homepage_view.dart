@@ -21,11 +21,6 @@ class HomepageView extends StatefulWidget {
 class _HomepageViewState extends State<HomepageView> {
   final _advancedDrawerController = AdvancedDrawerController();
   int currentIndex = 0;
-  // List pages = [
-  //   HomeTab(controller: _advancedDrawerController),
-  //   CatalogTab(),
-  //   AccountTab(),
-  // ];
   List pages = [];
 
   @override
@@ -33,18 +28,11 @@ class _HomepageViewState extends State<HomepageView> {
     pages.add(HomeTab(controller: _advancedDrawerController));
     pages.add(CatalogTab());
     pages.add(AccountTab());
-    // pages[0] = HomeTab(controller: _advancedDrawerController);
-    // pages[1] = CatalogTab();
-    // pages[2] = AccountTab();
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    // return Scaffold(
-    //   bottomNavigationBar: bottomNavigationBar(),
-    //   body: pages[currentIndex],
-    // );
     return AdvancedDrawer(
       backdrop: Container(
         width: double.infinity,
