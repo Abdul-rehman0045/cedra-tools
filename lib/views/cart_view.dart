@@ -195,7 +195,9 @@ class CartView extends ConsumerWidget {
                   backgroundColor: kPrimaryColor,
                   height: 50.w,
                   width: double.infinity,
-                  onPressed: () {},
+                  onPressed: () {
+                    refCartRead.checkout(context,ref);
+                  },
                 ),
               ],
             ),

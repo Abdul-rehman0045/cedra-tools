@@ -10,5 +10,6 @@ class ApiPaths {
   static const String changePassword = localBaseUrl + "/auth/change-password";
   static const String chaeckClaimStatus = localBaseUrl + "/auth/check-claim-status";
   static const String claimDailyBonus = localBaseUrl + "/auth/claim-daily-bonus";
+  static const String productCheckout = "/product/checkout";
   // static usersJobs(id) => "/users/$id/jobs";
 }
