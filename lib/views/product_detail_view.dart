@@ -2,7 +2,8 @@
 
 import 'package:cedratools/helper/assets.dart';
 import 'package:cedratools/helper/colors.dart';
-import 'package:cedratools/models/catalog_response_model.dart';
+import 'package:cedratools/models/product_response_model.dart';
+import 'package:cedratools/models/product_model.dart';
 import 'package:cedratools/view_models/cart_view_model.dart';
 import 'package:cedratools/view_models/product_info_view_model.dart';
 import 'package:cedratools/widgets/custom_elevated_button.dart';
@@ -23,7 +24,7 @@ class ProductDetailView extends ConsumerStatefulWidget {
 
 class ProductDetailViewState extends ConsumerState<ProductDetailView> {
   bool isDescriptionShow = false;
-  CatalogProductList? product;
+  Product? product;
 
   @override
   void initState() {
@@ -300,7 +301,7 @@ class ProductDetailViewState extends ConsumerState<ProductDetailView> {
                               ),
                               Html(data: "${product?.bodyHtml}"),
                               // Text(
-                              //   "The Launch VSP600 Automotive Videoscope Inspection Camera is an essential tool for any professional in the automotive sector. This high-tech device allows visual inspections in hard-to-reach areas, providing clear and detailed images that facilitate vehicle diagnosis and repair.  The Launch brand, recognized worldwide for its quality and durability, guarantees exceptional performance with every use. The VSP-600 model stands out for its ergonomic design and easy handling, allowing comfortable and efficient use, even during long work days.  This automotive video scope features a high-resolution camera that provides sharp, precise images. Its adjustable LED lighting allows clear vision in low light conditions, making it easy to identify problems and anomalies inside vehicles.  Additionally, the Launch VSP600 is compatible with a wide range of vehicles, making it a versatile and valuable tool for any workshop or garage. Its durability and resistance make it ideal for daily use in demanding work environments. With the Launch VSP600 Automotive Videoscope Inspection Camera, you will have a clear and precise view of what is happening inside the vehicles, allowing you to make more efficient and effective repairs.",
+                              //   "The Launch VSP600 Automotive Videoscope Inspection Camera is an essential tool for any professional in the automotive sector. This high-tech device allows visual inspections in hard-to-reach areas, providing clear and detailed images that facilitate vehicle diagnosis and repair.The Launch brand, recognized worldwide for its quality and durability, guarantees exceptional performance with every use. The VSP-600 model stands out for its ergonomic design and easy handling, allowing comfortable and efficient use, even during long work days.This automotive video scope features a high-resolution camera that provides sharp, precise images. Its adjustable LED lighting allows clear vision in low light conditions, making it easy to identify problems and anomalies inside vehicles.Additionally, the Launch VSP600 is compatible with a wide range of vehicles, making it a versatile and valuable tool for any workshop or garage. Its durability and resistance make it ideal for daily use in demanding work environments. With the Launch VSP600 Automotive Videoscope Inspection Camera, you will have a clear and precise view of what is happening inside the vehicles, allowing you to make more efficient and effective repairs.",
                               //   style: TextStyle(
                               //     fontWeight: FontWeight.w400,
                               //     fontSize: 12.sp,
@@ -416,7 +417,9 @@ class ProductDetailViewState extends ConsumerState<ProductDetailView> {
                     width: 150.w,
                     height: 45.w,
                     fontSize: 18.sp,
-                    onPressed: () {},
+                    onPressed: () {
+                      refCartRead.checkout(context, ref);
+                    },
                   ),
                 ),
                 SizedBox(width: 10.w),

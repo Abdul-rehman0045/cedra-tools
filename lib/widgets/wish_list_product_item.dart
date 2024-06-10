@@ -1,5 +1,6 @@
 import 'package:cedratools/helper/colors.dart';
-import 'package:cedratools/models/catalog_response_model.dart';
+import 'package:cedratools/models/product_response_model.dart';
+import 'package:cedratools/models/product_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -9,7 +10,7 @@ class WishListProductItem extends StatelessWidget {
     this.productData,
     super.key,
   });
-  final CatalogProductList? productData;
+  final Product? productData;
 
   @override
   Widget build(BuildContext context) {

@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
@@ -22,10 +24,23 @@ class _CheckoutWebViewState extends State<CheckoutWebView> {
           onProgress: (int progress) {
             // Update loading bar.
           },
-          onPageStarted: (String url) {},
-          onPageFinished: (String url) {},
-          onHttpError: (HttpResponseError error) {},
-          onWebResourceError: (WebResourceError error) {},
+          onPageStarted: (String url) {
+            log('onPageStarted: $url');
+            //if url contains "https://escaner-automotriz.com.mx/" then move to homepage
+            if (url.contains("https://escaner-automotriz.com.mx")) {
+              //pop until homepage
+              Navigator.popUntil(context, (route) => route.isFirst);
+            }
+          },
+          onPageFinished: (String url) {
+            log('onPageFinished: $url');
+          },
+          onHttpError: (HttpResponseError error) {
+            log('onHttpError: $error');
+          },
+          onWebResourceError: (WebResourceError error) {
+            log('onWebResourceError: $error');
+          },
           // onNavigationRequest: (NavigationRequest request) {
           //   if (request.url.startsWith('https://www.youtube.com/')) {
           //     return NavigationDecision.prevent;

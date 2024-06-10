@@ -1,6 +1,7 @@
 import 'package:cedratools/helper/app_routes.dart';
-import 'package:cedratools/models/catalog_response_model.dart';
+import 'package:cedratools/models/product_response_model.dart';
 import 'package:cedratools/models/checkout_response_model.dart';
+import 'package:cedratools/models/product_model.dart';
 import 'package:cedratools/models/response_model.dart';
 import 'package:cedratools/networking/api_paths.dart';
 import 'package:cedratools/networking/api_services.dart';
@@ -12,11 +13,11 @@ var cartViewModel = ChangeNotifierProvider((ref) => CartViewModel());
 
 class CartViewModel extends ChangeNotifier {
   CheckoutResponseModel? checkoutObj;
-  List<CatalogProductList> cartList = [];
+  List<Product> cartList = [];
   List<double> priceList = [];
   double totalPrice = 0;
 
-  void addQuantity(int availableStack, CatalogProductList product) {
+  void addQuantity(int availableStack, Product product) {
     if (product.userSelectedQuantity >= 0 && product.userSelectedQuantity < availableStack) {
       product.userSelectedQuantity++;
       setPrice();
@@ -25,7 +26,7 @@ class CartViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  void removeQuantity(CatalogProductList product) {
+  void removeQuantity(Product product) {
     if (product.userSelectedQuantity > 0) {
       product.userSelectedQuantity--;
       setPrice();
@@ -34,7 +35,7 @@ class CartViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  void addToCart(CatalogProductList product, int availableStack, int quantity) {
+  void addToCart(Product product, int availableStack, int quantity) {
     product.userSelectedQuantity = quantity;
     if (cartList.contains(product)) {
       product.userSelectedQuantity = quantity;
@@ -75,6 +76,11 @@ class CartViewModel extends ChangeNotifier {
   }
 
   Future checkout(BuildContext context, WidgetRef ref) async {
+    // var map = {
+    //   "items": [
+    //     {"variant_id": '40417138638897', "quantity": 1}
+    //   ]
+    // };
     var map = {
       "items": cartList.map((e) {
         return {"variant_id": e.variants![0].id, "quantity": e.userSelectedQuantity};

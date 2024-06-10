@@ -21,8 +21,8 @@ class ApiServices {
       if (response.statusCode! >= 200 && response.statusCode! < 300) {
         return ResponseModel.fromJson(response.data);
       }
-    } on DioError catch (e) {
-      log("${e.response}");
+    } on DioException catch (e) {
+      log("DioException: ${e.response}");
       // BaseHelper.showSnackBar(
       //     "${e.response?.data?['message'] ?? "${e.response}"}");
     } on SocketException catch (_) {

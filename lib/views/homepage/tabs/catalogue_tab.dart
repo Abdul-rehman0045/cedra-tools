@@ -2,7 +2,9 @@
 
 import 'package:cedratools/helper/assets.dart';
 import 'package:cedratools/helper/colors.dart';
-import 'package:cedratools/models/catalog_response_model.dart';
+import 'package:cedratools/models/product_response_model.dart';
+import 'package:cedratools/models/categories_response_model.dart';
+import 'package:cedratools/models/product_model.dart';
 import 'package:cedratools/view_models/catalog_view_model.dart';
 import 'package:cedratools/views/filter_view.dart';
 import 'package:cedratools/widgets/search_field.dart';
@@ -12,14 +14,14 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 
-class CatalogTab extends ConsumerStatefulWidget {
-  CatalogTab({super.key});
+class CatalogueTab extends ConsumerStatefulWidget {
+  CatalogueTab({super.key});
 
   @override
   CatalogTabState createState() => CatalogTabState();
 }
 
-class CatalogTabState extends ConsumerState<CatalogTab> {
+class CatalogTabState extends ConsumerState<CatalogueTab> with AutomaticKeepAliveClientMixin {
   List<String> list = <String>['Most Relevant', 'Lower Price', 'Higher Price'];
   late CatalogViewModel refCatalogRead;
   late CatalogViewModel refCatalogWatch;
@@ -27,13 +29,19 @@ class CatalogTabState extends ConsumerState<CatalogTab> {
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      ref.read(cataLogViewModel).getCategories(ref);
       ref.read(cataLogViewModel).getProductList(ref);
     });
     super.initState();
   }
 
   @override
+  bool get wantKeepAlive => true;
+
+  @override
   Widget build(BuildContext context) {
+    super.build(context);
+
     refCatalogRead = ref.read(cataLogViewModel);
     refCatalogWatch = ref.watch(cataLogViewModel);
     return Scaffold(
@@ -52,40 +60,43 @@ class CatalogTabState extends ConsumerState<CatalogTab> {
             SizedBox(
               height: 30.h,
             ),
-            Container(
-              height: 65.h,
-              width: double.infinity,
-              child: ListView.separated(
-                  shrinkWrap: true,
-                  scrollDirection: Axis.horizontal,
-                  itemBuilder: (context, index) {
-                    return Chip(
-                      label: Text(
-                        "Automotive scanner",
-                        style: TextStyle(
-                          fontSize: 12.sp,
-                          fontWeight: FontWeight.w500,
-                          color: kInactiveChip,
+            if (refCatalogWatch.categoriesResponseModel!.categories != null) ...[
+              Container(
+                height: 65.h,
+                width: double.infinity,
+                child: ListView.separated(
+                    shrinkWrap: true,
+                    scrollDirection: Axis.horizontal,
+                    itemBuilder: (context, index) {
+                      Category category = refCatalogWatch.categoriesResponseModel!.categories![index];
+                      return Chip(
+                        label: Text(
+                          "${category.title}",
+                          style: TextStyle(
+                            fontSize: 12.sp,
+                            fontWeight: FontWeight.w500,
+                            color: kInactiveChip,
+                          ),
                         ),
-                      ),
-                      padding: EdgeInsets.zero,
-                      shape: RoundedRectangleBorder(
-                        side: BorderSide(
-                          color: kInactiveChip,
-                          width: 1.5,
+                        padding: EdgeInsets.zero,
+                        shape: RoundedRectangleBorder(
+                          side: BorderSide(
+                            color: kInactiveChip,
+                            width: 1.5,
+                          ),
+                          borderRadius: BorderRadius.circular(37.r),
                         ),
-                        borderRadius: BorderRadius.circular(37.r),
-                      ),
-                    );
-                  },
-                  separatorBuilder: (context, index) {
-                    return SizedBox(width: 16.w);
-                  },
-                  itemCount: 13),
-            ),
-            SizedBox(
-              height: 20.h,
-            ),
+                      );
+                    },
+                    separatorBuilder: (context, index) {
+                      return SizedBox(width: 16.w);
+                    },
+                    itemCount: refCatalogWatch.categoriesResponseModel!.categories!.length),
+              ),
+              SizedBox(
+                height: 20.h,
+              ),
+            ],
             Row(
               children: [
                 IconButton(
@@ -167,10 +178,10 @@ class CatalogTabState extends ConsumerState<CatalogTab> {
                     childAspectRatio: 0.7,
                     crossAxisCount: 2,
                     children: List.generate(
-                      refCatalogWatch.catalogresponse!.catalogProductList!.length,
+                      refCatalogWatch.catalogresponse!.products!.length,
                       // 23,
                       (index) {
-                        CatalogProductList productData = refCatalogWatch.catalogresponse!.catalogProductList![index];
+                        Product productData = refCatalogWatch.catalogresponse!.products![index];
                         return WishListProductItem(
                           productData: productData,
                         );

@@ -1,9 +1,12 @@
 // ignore_for_file: must_be_immutable
 
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cedratools/helper/app_routes.dart';
 import 'package:cedratools/helper/assets.dart';
 import 'package:cedratools/helper/colors.dart';
-import 'package:cedratools/models/catalog_response_model.dart';
+import 'package:cedratools/models/product_response_model.dart';
+import 'package:cedratools/models/product_model.dart';
+import 'package:cedratools/models/promotion_model.dart';
 import 'package:cedratools/view_models/cart_view_model.dart';
 import 'package:cedratools/view_models/home_view_model.dart';
 import 'package:cedratools/views/cart_view.dart';
@@ -25,17 +28,23 @@ class HomeTab extends ConsumerStatefulWidget {
   HomeTabState createState() => HomeTabState();
 }
 
-class HomeTabState extends ConsumerState<HomeTab> {
+class HomeTabState extends ConsumerState<HomeTab> with AutomaticKeepAliveClientMixin {
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      ref.read(homeViewModel).getProductList(ref);
+      ref.read(homeViewModel).getCarouselImages(ref);
+      ref.read(homeViewModel).getPromotionProducts(ref);
     });
     super.initState();
   }
 
   @override
+  bool get wantKeepAlive => true;
+
+  @override
   Widget build(BuildContext context) {
+    super.build(context);
+
     var refCartRead = ref.read(cartViewModel);
     var refCartWatch = ref.watch(cartViewModel);
     var refCatalogWatch = ref.watch(homeViewModel);
@@ -134,7 +143,7 @@ class HomeTabState extends ConsumerState<HomeTab> {
                     ),
                     Expanded(
                       child: Text(
-                        "1,200",
+                        "-1",
                         style: TextStyle(
                           fontSize: 16.sp,
                           fontWeight: FontWeight.w600,
@@ -157,45 +166,34 @@ class HomeTabState extends ConsumerState<HomeTab> {
             SizedBox(
               height: 24.h,
             ),
-            Container(
-              height: 155,
-              width: double.infinity,
-              margin: EdgeInsets.only(left: 30.w),
-              child: ListView.separated(
-                  shrinkWrap: true,
-                  scrollDirection: Axis.horizontal,
-                  itemBuilder: (context, index) {
-                    return Container(
-                      height: 155.h,
-                      width: 327.w,
-                      clipBehavior: Clip.antiAlias,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(8.r),
-                        // boxShadow: [
-                        //   BoxShadow(
-                        //     color: Colors.grey.withOpacity(0.2),
-                        //     spreadRadius: 2,
-                        //     blurRadius: 2,
-                        //   ),
-                        // ],
-                      ),
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(8.r),
-                        clipBehavior: Clip.antiAlias,
-                        child: Image.asset(
-                          Assets.slider,
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                    );
-                  },
-                  separatorBuilder: (context, index) {
-                    return SizedBox(
-                      width: 18.w,
-                    );
-                  },
-                  itemCount: 3),
+            // add carousel here
+            CarouselSlider(
+              items: List.generate(
+                refCatalogWatch.carouselImages.length,
+                (index) => Container(
+                  // margin: EdgeInsets.all(6.0),
+                  clipBehavior: Clip.antiAlias,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(8.0),
+                  ),
+
+                  child: Image.network(
+                    refCatalogWatch.carouselImages[index],
+                    fit: BoxFit.cover,
+                  ),
+                ),
+              ),
+
+              //Slider Container properties
+              options: CarouselOptions(
+                height: 155,
+                enlargeCenterPage: true,
+                autoPlay: true,
+                autoPlayCurve: Curves.fastOutSlowIn,
+                enableInfiniteScroll: true,
+              ),
             ),
+
             SizedBox(
               height: 29.h,
             ),
@@ -214,7 +212,7 @@ class HomeTabState extends ConsumerState<HomeTab> {
             SizedBox(
               height: 22.h,
             ),
-            refCatalogWatch.catalogresponse == null
+            refCatalogWatch.promotionProducts == null
                 ? Container()
                 : CategoryWidget(
                     heading: CategoryTypesWidget(),
@@ -324,15 +322,17 @@ class CategoryWidget extends StatelessWidget {
           margin: EdgeInsets.only(left: 13.w),
           height: 330.h,
           width: double.infinity,
-          child: productRef == null && productRef!.catalogresponse == null
-              ? Container()
+          child: productRef!.promotionProducts?.products == null || productRef!.promotionProducts!.products!.isEmpty
+              ? Center(
+                  child: Text("No Promoted Products"),
+                )
               : ListView.separated(
                   padding: EdgeInsets.only(top: 10.h),
                   shrinkWrap: true,
                   scrollDirection: Axis.horizontal,
-                  itemCount: 9,
+                  itemCount: productRef!.promotionProducts!.products!.length,
                   itemBuilder: (context, index) {
-                    CatalogProductList productData = productRef!.catalogresponse!.catalogProductList![index];
+                    Product product = productRef!.promotionProducts!.products![index];
                     return Container(
                       width: 239.w,
                       margin: EdgeInsets.only(bottom: 2),
@@ -349,7 +349,7 @@ class CategoryWidget extends StatelessWidget {
                       ),
                       child: GestureDetector(
                         onTap: () {
-                          Navigator.pushNamed(context, AppRoutes.PRODUCT_DETAIL_VIEW, arguments: productData);
+                          Navigator.pushNamed(context, AppRoutes.PRODUCT_DETAIL_VIEW, arguments: product);
                         },
                         child: Column(
                           mainAxisSize: MainAxisSize.max,
@@ -370,7 +370,7 @@ class CategoryWidget extends StatelessWidget {
                                     topRight: Radius.circular(6.r),
                                   ),
                                   child: Image.network(
-                                    "${productData.image?.src}",
+                                    "${product.image?.src}",
                                     // fit: BoxFit.contain,
                                   ),
                                 ),
@@ -401,8 +401,7 @@ class CategoryWidget extends StatelessWidget {
                                             crossAxisAlignment: CrossAxisAlignment.start,
                                             children: [
                                               Text(
-                                                // "\$11,610",
-                                                "\$${productData.variants![0].compareAtPrice}",
+                                                "\$${product.variants![0].compareAtPrice}",
                                                 style: TextStyle(
                                                   fontWeight: FontWeight.w600,
                                                   fontSize: 12.sp,
@@ -412,8 +411,7 @@ class CategoryWidget extends StatelessWidget {
                                                 ),
                                               ),
                                               Text(
-                                                // "\$11,610",
-                                                "\$${productData.variants![0].price}",
+                                                "\$${product.variants![0].price}",
                                                 style: TextStyle(
                                                   fontWeight: FontWeight.w600,
                                                   fontSize: 14.sp,
@@ -442,8 +440,7 @@ class CategoryWidget extends StatelessWidget {
                                     Padding(
                                       padding: EdgeInsets.only(left: 8.w),
                                       child: Text(
-                                        // "12x \$870.75 without interest Launch Creader 359 Scanner 70 Brands & 29 Resetters",
-                                        "${productData.title}",
+                                        "${product.title}",
                                         maxLines: 3,
                                         style: TextStyle(
                                           fontSize: 12.sp,
@@ -502,44 +499,45 @@ class CategoryTypesWidget extends StatelessWidget {
               ),
             ),
           ),
-          SizedBox(
-            width: 13.w,
-          ),
-          TextButton(
-            onPressed: () {},
-            style: TextButton.styleFrom(
-              padding: EdgeInsets.zero,
-              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-              minimumSize: Size.zero,
-            ),
-            child: Text(
-              "More Popular",
-              style: TextStyle(
-                fontSize: 12.sp,
-                fontWeight: FontWeight.w600,
-                color: Colors.black,
-              ),
-            ),
-          ),
-          SizedBox(
-            width: 13.w,
-          ),
-          TextButton(
-            onPressed: () {},
-            style: TextButton.styleFrom(
-              padding: EdgeInsets.zero,
-              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-              minimumSize: Size.zero,
-            ),
-            child: Text(
-              "Free Shipping",
-              style: TextStyle(
-                fontSize: 12.sp,
-                fontWeight: FontWeight.w600,
-                color: Colors.black,
-              ),
-            ),
-          ),
+          // SizedBox(
+          //   width: 13.w,
+          // ),
+          // TextButton(
+          //   onPressed: () {},
+          //   style: TextButton.styleFrom(
+          //     padding: EdgeInsets.zero,
+          //     tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+          //     minimumSize: Size.zero,
+          //   ),
+          //   child: Text(
+          //     "Most Popular",
+          //     style: TextStyle(
+          //       fontSize: 12.sp,
+          //       fontWeight: FontWeight.w600,
+          //       color: Colors.black,
+          //     ),
+          //   ),
+          // ),
+          // SizedBox(
+          //   width: 13.w,
+          // ),
+          // TextButton(
+          //   onPressed: () {},
+          //   style: TextButton.styleFrom(
+          //     padding: EdgeInsets.zero,
+          //     tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+          //     minimumSize: Size.zero,
+          //   ),
+          //   child: Text(
+          //     "Free Shipping",
+          //     style: TextStyle(
+          //       fontSize: 12.sp,
+          //       fontWeight: FontWeight.w600,
+          //       color: Colors.black,
+          //     ),
+          //   ),
+          // ),
+
           Spacer(),
           TextButton(
             onPressed: () {},

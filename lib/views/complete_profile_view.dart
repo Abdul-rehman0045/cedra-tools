@@ -86,11 +86,12 @@ class _CompleteProfileViewState extends State<CompleteProfileView> {
                       height: 45.w,
                       width: double.infinity,
                       onPressed: () {
-                        Navigator.push(
+                        Navigator.pushAndRemoveUntil(
                           context,
                           MaterialPageRoute(
                             builder: (context) => HomepageView(),
                           ),
+                          (route) => false,
                         );
                       },
                     ),

@@ -2,7 +2,8 @@ import 'dart:ffi';
 
 import 'package:cedratools/helper/assets.dart';
 import 'package:cedratools/helper/colors.dart';
-import 'package:cedratools/models/catalog_response_model.dart';
+import 'package:cedratools/models/product_response_model.dart';
+import 'package:cedratools/models/product_model.dart';
 import 'package:cedratools/view_models/cart_view_model.dart';
 import 'package:cedratools/widgets/custom_elevated_button.dart';
 import 'package:flutter/cupertino.dart';
@@ -45,7 +46,7 @@ class CartView extends ConsumerWidget {
                     padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 30.h),
                     shrinkWrap: true,
                     itemBuilder: (context, index) {
-                      CatalogProductList product = refCartRead.cartList[index];
+                      Product product = refCartRead.cartList[index];
                       return CartProduct(
                         product: product,
                         index: index,
@@ -196,7 +197,7 @@ class CartView extends ConsumerWidget {
                   height: 50.w,
                   width: double.infinity,
                   onPressed: () {
-                    refCartRead.checkout(context,ref);
+                    refCartRead.checkout(context, ref);
                   },
                 ),
               ],
@@ -215,7 +216,7 @@ class CartProduct extends StatelessWidget {
     required this.cartRefrence,
     super.key,
   });
-  CatalogProductList product;
+  Product product;
   int index;
   CartViewModel cartRefrence;
 

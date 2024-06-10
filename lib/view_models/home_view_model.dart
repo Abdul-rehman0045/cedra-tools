@@ -1,5 +1,8 @@
-import 'package:cedratools/models/catalog_response_model.dart';
+import 'dart:developer';
+
+import 'package:cedratools/models/product_response_model.dart';
 import 'package:cedratools/models/claim_status_response_model.dart';
+import 'package:cedratools/models/promotion_model.dart';
 import 'package:cedratools/models/response_model.dart';
 import 'package:cedratools/networking/api_paths.dart';
 import 'package:cedratools/networking/api_services.dart';
@@ -11,8 +14,10 @@ var homeViewModel = ChangeNotifierProvider<HomeViewModel>((ref) => HomeViewModel
 
 class HomeViewModel extends ChangeNotifier {
   ClaimStatusResponseModel? claimStatusObj;
-  CatalogResponseViewModel? catalogresponse;
-  
+  ProductResponseModel? promotionProducts;
+
+  List carouselImages = [];
+
   Future checkClaimStatus() async {
     try {
       ResponseModel response = await ApiServices.request(ApiPaths.chaeckClaimStatus, method: RequestMethod.GET);
@@ -35,17 +40,38 @@ class HomeViewModel extends ChangeNotifier {
     }
   }
 
+  // void getProducts(WidgetRef ref) async {
+  //   try {
+  //     ref.watch(loaderViewModel).showLoader();
+  //     ResponseModel response = await ApiServices.request(ApiPaths.products, method: RequestMethod.GET);
+  //     promotionModel = PromotionModel.fromJson(response.data);
+  //     notifyListeners();
+  //   } catch (e) {
+  //   } finally {
+  //     ref.watch(loaderViewModel).hideLoader();
+  //   }
+  // }
 
-  void getProductList(WidgetRef ref) async {
+  void getPromotionProducts(WidgetRef ref) async {
     try {
-    ref.watch(loaderViewModel).showLoader();
-    ResponseModel response = await ApiServices.request(ApiPaths.productGetList, method: RequestMethod.GET);
-    catalogresponse = CatalogResponseViewModel.fromJson(response.data);
-    notifyListeners();
+      ref.watch(loaderViewModel).showLoader();
+      ResponseModel response = await ApiServices.request(ApiPaths.promotionProducts, method: RequestMethod.GET);
+      promotionProducts = ProductResponseModel.fromJson(response.data);
+      notifyListeners();
     } catch (e) {
+      log('error: $e');
     } finally {
-    ref.watch(loaderViewModel).hideLoader();
+      ref.watch(loaderViewModel).hideLoader();
     }
   }
 
+  void getCarouselImages(WidgetRef ref) async {
+    try {
+      ResponseModel response = await ApiServices.request(ApiPaths.carouselImages, method: RequestMethod.GET);
+      carouselImages = response.data;
+      notifyListeners();
+    } catch (e) {
+      log('error: $e');
+    } finally {}
+  }
 }

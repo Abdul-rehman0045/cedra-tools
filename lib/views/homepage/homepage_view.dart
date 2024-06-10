@@ -3,7 +3,7 @@ import 'package:cedratools/helper/assets.dart';
 import 'package:cedratools/helper/colors.dart';
 import 'package:cedratools/views/contact_us_view.dart';
 import 'package:cedratools/views/homepage/tabs/account_tab.dart';
-import 'package:cedratools/views/homepage/tabs/catalog_tab.dart';
+import 'package:cedratools/views/homepage/tabs/catalogue_tab.dart';
 import 'package:cedratools/views/homepage/tabs/home_tab.dart';
 import 'package:cedratools/views/reward_view.dart';
 import 'package:flutter/material.dart';
@@ -26,7 +26,7 @@ class _HomepageViewState extends State<HomepageView> {
   @override
   void initState() {
     pages.add(HomeTab(controller: _advancedDrawerController));
-    pages.add(CatalogTab());
+    pages.add(CatalogueTab());
     pages.add(AccountTab());
     super.initState();
   }
@@ -145,7 +145,7 @@ class _HomepageViewState extends State<HomepageView> {
         ),
         bottomNavigationBarItem(
           Assets.catalogIcon,
-          "Catalog",
+          "Catalogue",
         ),
         bottomNavigationBarItem(
           Assets.accountIcon,

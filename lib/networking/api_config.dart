@@ -2,7 +2,6 @@ import 'package:dio/dio.dart';
 
 import 'api_paths.dart';
 
-
 class ApiConfig {
   static final ApiConfig _singleton = ApiConfig._internal();
   factory ApiConfig() => _singleton;
@@ -13,7 +12,7 @@ class ApiConfig {
     //creates the singleton instance
     dio = Dio();
     // Set default configs
-    dio.options.baseUrl = ApiPaths.localBaseUrl;
+    dio.options.baseUrl = ApiPaths.baseUrl;
     dio.options.connectTimeout = Duration(minutes: 2);
     dio.options.receiveTimeout = Duration(minutes: 2);
   }

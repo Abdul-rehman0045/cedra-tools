@@ -1,24 +1,4 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-// var catalogProductListRef = ChangeNotifierProvider((ref) => CatalogProductList());
-
-class CatalogResponseViewModel {
-  List<CatalogProductList>? catalogProductList;
-
-  CatalogResponseViewModel({this.catalogProductList});
-
-  CatalogResponseViewModel.fromJson(json) {
-    if (json != null) {
-      catalogProductList = <CatalogProductList>[];
-      json.forEach((v) {
-        catalogProductList!.add(new CatalogProductList.fromJson(v));
-      });
-    }
-  }
-}
-
-class CatalogProductList {
+class Product {
   var id;
   String? title;
   String? bodyHtml;
@@ -33,13 +13,13 @@ class CatalogProductList {
   String? tags;
   String? status;
   String? adminGraphqlApiId;
-  List<Variants>? variants;
-  List<Options>? options;
-  List<Images>? images;
-  Images? image;
+  List<ProductVariant>? variants;
+  List<ProductOption>? options;
+  List<ProductImage>? images;
+  ProductImage? image;
   int userSelectedQuantity = 0;
 
-  CatalogProductList(
+  Product(
       {this.id,
       this.title,
       this.bodyHtml,
@@ -59,7 +39,7 @@ class CatalogProductList {
       this.images,
       this.image});
 
-  CatalogProductList.fromJson(Map<String, dynamic> json) {
+  Product.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     title = json['title'];
     bodyHtml = json['body_html'];
@@ -75,24 +55,24 @@ class CatalogProductList {
     status = json['status'];
     adminGraphqlApiId = json['admin_graphql_api_id'];
     if (json['variants'] != null) {
-      variants = <Variants>[];
+      variants = <ProductVariant>[];
       json['variants'].forEach((v) {
-        variants!.add(new Variants.fromJson(v));
+        variants!.add(new ProductVariant.fromJson(v));
       });
     }
     if (json['options'] != null) {
-      options = <Options>[];
+      options = <ProductOption>[];
       json['options'].forEach((v) {
-        options!.add(new Options.fromJson(v));
+        options!.add(new ProductOption.fromJson(v));
       });
     }
     if (json['images'] != null) {
-      images = <Images>[];
+      images = <ProductImage>[];
       json['images'].forEach((v) {
-        images!.add(new Images.fromJson(v));
+        images!.add(new ProductImage.fromJson(v));
       });
     }
-    image = json['image'] != null ? new Images.fromJson(json['image']) : null;
+    image = json['image'] != null ? new ProductImage.fromJson(json['image']) : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -127,7 +107,7 @@ class CatalogProductList {
   }
 }
 
-class Variants {
+class ProductVariant {
   var id;
   var productId;
   String? title;
@@ -155,7 +135,7 @@ class Variants {
   String? adminGraphqlApiId;
   var imageId;
 
-  Variants(
+  ProductVariant(
       {this.id,
       this.productId,
       this.title,
@@ -183,7 +163,7 @@ class Variants {
       this.adminGraphqlApiId,
       this.imageId});
 
-  Variants.fromJson(Map<String, dynamic> json) {
+  ProductVariant.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     productId = json['product_id'];
     title = json['title'];
@@ -244,16 +224,16 @@ class Variants {
   }
 }
 
-class Options {
+class ProductOption {
   var id;
   var productId;
   String? name;
   var position;
   List<String>? values;
 
-  Options({this.id, this.productId, this.name, this.position, this.values});
+  ProductOption({this.id, this.productId, this.name, this.position, this.values});
 
-  Options.fromJson(Map<String, dynamic> json) {
+  ProductOption.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     productId = json['product_id'];
     name = json['name'];
@@ -272,7 +252,7 @@ class Options {
   }
 }
 
-class Images {
+class ProductImage {
   var id;
   String? alt;
   var position;
@@ -284,9 +264,9 @@ class Images {
   var height;
   String? src;
 
-  Images({this.id, this.alt, this.position, this.productId, this.createdAt, this.updatedAt, this.adminGraphqlApiId, this.width, this.height, this.src});
+  ProductImage({this.id, this.alt, this.position, this.productId, this.createdAt, this.updatedAt, this.adminGraphqlApiId, this.width, this.height, this.src});
 
-  Images.fromJson(Map<String, dynamic> json) {
+  ProductImage.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     alt = json['alt'];
     position = json['position'];
