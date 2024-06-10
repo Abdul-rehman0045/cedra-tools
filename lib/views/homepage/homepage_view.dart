@@ -1,3 +1,4 @@
+import 'package:cedratools/helper/app_routes.dart';
 import 'package:cedratools/helper/assets.dart';
 import 'package:cedratools/helper/colors.dart';
 import 'package:cedratools/views/contact_us_view.dart';
@@ -20,11 +21,6 @@ class HomepageView extends StatefulWidget {
 class _HomepageViewState extends State<HomepageView> {
   final _advancedDrawerController = AdvancedDrawerController();
   int currentIndex = 0;
-  // List pages = [
-  //   HomeTab(controller: _advancedDrawerController),
-  //   CatalogTab(),
-  //   AccountTab(),
-  // ];
   List pages = [];
 
   @override
@@ -32,18 +28,11 @@ class _HomepageViewState extends State<HomepageView> {
     pages.add(HomeTab(controller: _advancedDrawerController));
     pages.add(CatalogTab());
     pages.add(AccountTab());
-    // pages[0] = HomeTab(controller: _advancedDrawerController);
-    // pages[1] = CatalogTab();
-    // pages[2] = AccountTab();
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    // return Scaffold(
-    //   bottomNavigationBar: bottomNavigationBar(),
-    //   body: pages[currentIndex],
-    // );
     return AdvancedDrawer(
       backdrop: Container(
         width: double.infinity,
@@ -105,12 +94,11 @@ class _HomepageViewState extends State<HomepageView> {
               // ),
               ListTile(
                 onTap: () {
-                  Navigator.push(
+                  Navigator.pushNamed(
                     context,
-                    MaterialPageRoute(
-                      builder: (context) => RewardView(),
-                    ),
+                    AppRoutes.REWARD_VIEW,
                   );
+                  _advancedDrawerController.hideDrawer();
                 },
                 title: Text(
                   'Get Rewards',

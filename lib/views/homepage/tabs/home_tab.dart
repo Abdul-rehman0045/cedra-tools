@@ -1,30 +1,52 @@
 // ignore_for_file: must_be_immutable
 
+import 'package:cedratools/helper/app_routes.dart';
 import 'package:cedratools/helper/assets.dart';
 import 'package:cedratools/helper/colors.dart';
+import 'package:cedratools/models/catalog_response_model.dart';
+import 'package:cedratools/view_models/cart_view_model.dart';
+import 'package:cedratools/view_models/home_view_model.dart';
 import 'package:cedratools/views/cart_view.dart';
 import 'package:cedratools/views/product_detail_view.dart';
 import 'package:cedratools/views/reward_view.dart';
 import 'package:cedratools/widgets/custom_appbar.dart';
 import 'package:cedratools/widgets/search_field.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_advanced_drawer/flutter_advanced_drawer.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 
-class HomeTab extends StatelessWidget {
+class HomeTab extends ConsumerStatefulWidget {
   HomeTab({super.key, required this.controller});
   AdvancedDrawerController controller;
+  @override
+  HomeTabState createState() => HomeTabState();
+}
+
+class HomeTabState extends ConsumerState<HomeTab> {
+  @override
+  void initState() {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      ref.read(homeViewModel).getProductList(ref);
+    });
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
+    var refCartRead = ref.read(cartViewModel);
+    var refCartWatch = ref.watch(cartViewModel);
+    var refCatalogWatch = ref.watch(homeViewModel);
+
     return Scaffold(
       backgroundColor: kHomeScaffoldBg,
       // appBar: CustomAppBar(),
       appBar: AppBar(
         leading: InkWell(
           onTap: () {
-            controller.showDrawer();
+            widget.controller.showDrawer();
           },
           child: Column(
             mainAxisSize: MainAxisSize.min,
@@ -41,11 +63,9 @@ class HomeTab extends StatelessWidget {
               children: [
                 InkWell(
                   onTap: () {
-                    Navigator.push(
+                    Navigator.pushNamed(
                       context,
-                      MaterialPageRoute(
-                        builder: (context) => RewardView(),
-                      ),
+                      AppRoutes.REWARD_VIEW,
                     );
                   },
                   child: Column(
@@ -61,20 +81,16 @@ class HomeTab extends StatelessWidget {
                 ),
                 InkWell(
                   onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => CartView(),
-                      ),
-                    );
+                    Navigator.pushNamed(context, AppRoutes.CART_VIEW);
                   },
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      SvgPicture.asset(Assets.cart),
-                    ],
-                  ),
+                  child: refCartWatch.cartList.isEmpty
+                      ? SvgPicture.asset(Assets.cart)
+                      : Badge(
+                          backgroundColor: kBadgeBg,
+                          label: Text("${refCartWatch.cartList.length}"),
+                          textStyle: TextStyle(fontSize: 10.sp),
+                          child: SvgPicture.asset(Assets.cart),
+                        ),
                 ),
               ],
             ),
@@ -198,83 +214,86 @@ class HomeTab extends StatelessWidget {
             SizedBox(
               height: 22.h,
             ),
-            CategoryWidget(
-              heading: CategoryTypesWidget(),
-            ),
-            SizedBox(
-              height: 18.h,
-            ),
-            CategoryWidget(
-              heading: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 20.w),
-                child: Row(
-                  children: [
-                    Text(
-                      "Discount Items with Coins",
-                      style: TextStyle(
-                        fontSize: 12.sp,
-                        fontWeight: FontWeight.w600,
-                        color: Colors.black,
-                      ),
-                    ),
-                    Spacer(),
-                    TextButton(
-                      onPressed: () {},
-                      style: TextButton.styleFrom(
-                        padding: EdgeInsets.zero,
-                        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                        minimumSize: Size.zero,
-                      ),
-                      child: Text(
-                        "More>>",
-                        style: TextStyle(
-                          fontSize: 12.sp,
-                          fontWeight: FontWeight.w600,
-                          color: kBlueTextBtn,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            SizedBox(
-              height: 18.h,
-            ),
-            CategoryWidget(
-              heading: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 20.w),
-                child: Row(
-                  children: [
-                    Text(
-                      "Recommended products",
-                      style: TextStyle(
-                        fontSize: 12.sp,
-                        fontWeight: FontWeight.w600,
-                        color: Colors.black,
-                      ),
-                    ),
-                    Spacer(),
-                    TextButton(
-                      onPressed: () {},
-                      style: TextButton.styleFrom(
-                        padding: EdgeInsets.zero,
-                        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                        minimumSize: Size.zero,
-                      ),
-                      child: Text(
-                        "More>>",
-                        style: TextStyle(
-                          fontSize: 12.sp,
-                          fontWeight: FontWeight.w600,
-                          color: kBlueTextBtn,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
+            refCatalogWatch.catalogresponse == null
+                ? Container()
+                : CategoryWidget(
+                    heading: CategoryTypesWidget(),
+                    productRef: refCatalogWatch,
+                  ),
+            // SizedBox(
+            //   height: 18.h,
+            // ),
+            // CategoryWidget(
+            //   heading: Padding(
+            //     padding: EdgeInsets.symmetric(horizontal: 20.w),
+            //     child: Row(
+            //       children: [
+            //         Text(
+            //           "Discount Items with Coins",
+            //           style: TextStyle(
+            //             fontSize: 12.sp,
+            //             fontWeight: FontWeight.w600,
+            //             color: Colors.black,
+            //           ),
+            //         ),
+            //         Spacer(),
+            //         TextButton(
+            //           onPressed: () {},
+            //           style: TextButton.styleFrom(
+            //             padding: EdgeInsets.zero,
+            //             tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+            //             minimumSize: Size.zero,
+            //           ),
+            //           child: Text(
+            //             "More>>",
+            //             style: TextStyle(
+            //               fontSize: 12.sp,
+            //               fontWeight: FontWeight.w600,
+            //               color: kBlueTextBtn,
+            //             ),
+            //           ),
+            //         ),
+            //       ],
+            //     ),
+            //   ),
+            // ),
+            // SizedBox(
+            //   height: 18.h,
+            // ),
+            // CategoryWidget(
+            //   heading: Padding(
+            //     padding: EdgeInsets.symmetric(horizontal: 20.w),
+            //     child: Row(
+            //       children: [
+            //         Text(
+            //           "Recommended products",
+            //           style: TextStyle(
+            //             fontSize: 12.sp,
+            //             fontWeight: FontWeight.w600,
+            //             color: Colors.black,
+            //           ),
+            //         ),
+            //         Spacer(),
+            //         TextButton(
+            //           onPressed: () {},
+            //           style: TextButton.styleFrom(
+            //             padding: EdgeInsets.zero,
+            //             tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+            //             minimumSize: Size.zero,
+            //           ),
+            //           child: Text(
+            //             "More>>",
+            //             style: TextStyle(
+            //               fontSize: 12.sp,
+            //               fontWeight: FontWeight.w600,
+            //               color: kBlueTextBtn,
+            //             ),
+            //           ),
+            //         ),
+            //       ],
+            //     ),
+            //   ),
+            // ),
           ],
         ),
       ),
@@ -286,8 +305,10 @@ class CategoryWidget extends StatelessWidget {
   CategoryWidget({
     super.key,
     required this.heading,
+    this.productRef,
   });
   Widget heading;
+  HomeViewModel? productRef;
 
   @override
   Widget build(BuildContext context) {
@@ -301,141 +322,151 @@ class CategoryWidget extends StatelessWidget {
         ),
         Container(
           margin: EdgeInsets.only(left: 13.w),
-          height: 250.h,
+          height: 330.h,
           width: double.infinity,
-          child: ListView.separated(
-              padding: EdgeInsets.only(top: 10.h),
-              shrinkWrap: true,
-              scrollDirection: Axis.horizontal,
-              itemBuilder: (context, index) {
-                return Container(
-                  width: 239.w,
-                  margin: EdgeInsets.only(bottom: 2),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(6.r),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey.withOpacity(0.2),
-                        spreadRadius: 2,
-                        blurRadius: 2,
-                      ),
-                    ],
-                  ),
-                  child: GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => ProductDetailView(),
-                        ),
-                      );
-                    },
-                    child: Column(
-                      mainAxisSize: MainAxisSize.max,
-                      children: [
-                        Expanded(
-                          flex: 2,
-                          child: Container(
-                            width: double.infinity,
-                            clipBehavior: Clip.antiAlias,
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.only(
-                              topLeft: Radius.circular(6.r),
-                              topRight: Radius.circular(6.r),
-                            )),
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.only(
-                                topLeft: Radius.circular(6.r),
-                                topRight: Radius.circular(6.r),
-                              ),
-                              child: Image.network(
-                                "https://e0.pxfuel.com/wallpapers/241/839/desktop-wallpaper-tools-carpentry.jpg",
-                                fit: BoxFit.cover,
-                              ),
-                            ),
+          child: productRef == null && productRef!.catalogresponse == null
+              ? Container()
+              : ListView.separated(
+                  padding: EdgeInsets.only(top: 10.h),
+                  shrinkWrap: true,
+                  scrollDirection: Axis.horizontal,
+                  itemCount: 9,
+                  itemBuilder: (context, index) {
+                    CatalogProductList productData = productRef!.catalogresponse!.catalogProductList![index];
+                    return Container(
+                      width: 239.w,
+                      margin: EdgeInsets.only(bottom: 2),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(6.r),
+                        color: Colors.white,
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.withOpacity(0.2),
+                            spreadRadius: 2,
+                            blurRadius: 2,
                           ),
-                        ),
-                        Expanded(
-                          flex: 2,
-                          child: Container(
-                            width: double.infinity,
-                            decoration: BoxDecoration(
-                              color: kProductBg,
-                              borderRadius: BorderRadius.only(
-                                bottomLeft: Radius.circular(6.r),
-                                bottomRight: Radius.circular(6.r),
+                        ],
+                      ),
+                      child: GestureDetector(
+                        onTap: () {
+                          Navigator.pushNamed(context, AppRoutes.PRODUCT_DETAIL_VIEW, arguments: productData);
+                        },
+                        child: Column(
+                          mainAxisSize: MainAxisSize.max,
+                          children: [
+                            Expanded(
+                              flex: 3,
+                              child: Container(
+                                width: double.infinity,
+                                clipBehavior: Clip.antiAlias,
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.only(
+                                  topLeft: Radius.circular(6.r),
+                                  topRight: Radius.circular(6.r),
+                                )),
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.only(
+                                    topLeft: Radius.circular(6.r),
+                                    topRight: Radius.circular(6.r),
+                                  ),
+                                  child: Image.network(
+                                    "${productData.image?.src}",
+                                    // fit: BoxFit.contain,
+                                  ),
+                                ),
                               ),
                             ),
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Padding(
-                                  padding: EdgeInsets.symmetric(horizontal: 7.w, vertical: 4.h),
-                                  child: Row(
-                                    children: [
-                                      Container(
-                                        padding: EdgeInsets.symmetric(horizontal: 7.w, vertical: 4.h),
-                                        decoration: BoxDecoration(
-                                          color: kFreeShippingBg,
-                                          borderRadius: BorderRadius.circular(41.r),
-                                        ),
-                                        child: Text(
-                                          "Free Shipping",
-                                          style: TextStyle(
-                                            fontSize: 8.sp,
-                                            fontWeight: FontWeight.w400,
+                            Expanded(
+                              flex: 2,
+                              child: Container(
+                                width: double.infinity,
+                                decoration: BoxDecoration(
+                                  color: kProductBg,
+                                  borderRadius: BorderRadius.only(
+                                    bottomLeft: Radius.circular(6.r),
+                                    bottomRight: Radius.circular(6.r),
+                                  ),
+                                ),
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Padding(
+                                      padding: EdgeInsets.only(left: 7.w, right: 7.w, top: 8.h),
+                                      child: Row(
+                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                // "\$11,610",
+                                                "\$${productData.variants![0].compareAtPrice}",
+                                                style: TextStyle(
+                                                  fontWeight: FontWeight.w600,
+                                                  fontSize: 12.sp,
+                                                  color: kProductGreyText,
+                                                  decoration: TextDecoration.lineThrough,
+                                                  decorationColor: kProductGreyText,
+                                                ),
+                                              ),
+                                              Text(
+                                                // "\$11,610",
+                                                "\$${productData.variants![0].price}",
+                                                style: TextStyle(
+                                                  fontWeight: FontWeight.w600,
+                                                  fontSize: 14.sp,
+                                                  color: kInactiveChip,
+                                                ),
+                                              ),
+                                            ],
                                           ),
-                                        ),
+                                          Container(
+                                            padding: EdgeInsets.symmetric(horizontal: 7.w, vertical: 4.h),
+                                            decoration: BoxDecoration(
+                                              color: kFreeShippingBg,
+                                              borderRadius: BorderRadius.circular(41.r),
+                                            ),
+                                            child: Text(
+                                              "Free Shipping",
+                                              style: TextStyle(
+                                                fontSize: 8.sp,
+                                                fontWeight: FontWeight.w400,
+                                              ),
+                                            ),
+                                          ),
+                                        ],
                                       ),
-                                      Spacer(),
-                                      Text(
-                                        "\$11,610",
+                                    ),
+                                    Padding(
+                                      padding: EdgeInsets.only(left: 8.w),
+                                      child: Text(
+                                        // "12x \$870.75 without interest Launch Creader 359 Scanner 70 Brands & 29 Resetters",
+                                        "${productData.title}",
+                                        maxLines: 3,
                                         style: TextStyle(
-                                          fontWeight: FontWeight.w600,
                                           fontSize: 12.sp,
-                                          color: kProductGreyText,
-                                        ),
-                                      ),
-                                      SizedBox(
-                                        width: 13.w,
-                                      ),
-                                      Text(
-                                        "\$11,610",
-                                        style: TextStyle(
-                                          fontWeight: FontWeight.w600,
-                                          fontSize: 14.sp,
+                                          fontWeight: FontWeight.w300,
                                           color: kInactiveChip,
                                         ),
                                       ),
-                                    ],
-                                  ),
-                                ),
-                                Padding(
-                                  padding: EdgeInsets.only(left: 8.w),
-                                  child: Text(
-                                    "12x \$870.75 without interest Launch Creader 359 Scanner 70 Brands & 29 Resetters",
-                                    style: TextStyle(
-                                      fontSize: 12.sp,
-                                      fontWeight: FontWeight.w300,
-                                      color: kInactiveChip,
                                     ),
-                                  ),
+                                  ],
                                 ),
-                              ],
+                              ),
                             ),
-                          ),
+                          ],
                         ),
-                      ],
-                    ),
-                  ),
-                );
-              },
-              separatorBuilder: (context, index) {
-                return SizedBox(
-                  width: 11.w,
-                );
-              },
-              itemCount: 6),
+                      ),
+                    );
+                  },
+                  separatorBuilder: (context, index) {
+                    return SizedBox(
+                      width: 11.w,
+                    );
+                  },
+                ),
         ),
       ],
     );

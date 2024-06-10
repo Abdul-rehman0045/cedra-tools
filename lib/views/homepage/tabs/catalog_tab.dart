@@ -2,19 +2,40 @@
 
 import 'package:cedratools/helper/assets.dart';
 import 'package:cedratools/helper/colors.dart';
+import 'package:cedratools/models/catalog_response_model.dart';
+import 'package:cedratools/view_models/catalog_view_model.dart';
 import 'package:cedratools/views/filter_view.dart';
 import 'package:cedratools/widgets/search_field.dart';
 import 'package:cedratools/widgets/wish_list_product_item.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 
-class CatalogTab extends StatelessWidget {
+class CatalogTab extends ConsumerStatefulWidget {
   CatalogTab({super.key});
+
+  @override
+  CatalogTabState createState() => CatalogTabState();
+}
+
+class CatalogTabState extends ConsumerState<CatalogTab> {
   List<String> list = <String>['Most Relevant', 'Lower Price', 'Higher Price'];
+  late CatalogViewModel refCatalogRead;
+  late CatalogViewModel refCatalogWatch;
+
+  @override
+  void initState() {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      ref.read(cataLogViewModel).getProductList(ref);
+    });
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
+    refCatalogRead = ref.read(cataLogViewModel);
+    refCatalogWatch = ref.watch(cataLogViewModel);
     return Scaffold(
       backgroundColor: kHomeScaffoldBg,
       appBar: AppBar(
@@ -69,7 +90,12 @@ class CatalogTab extends StatelessWidget {
               children: [
                 IconButton(
                   onPressed: () {
-                    Navigator.push(context, MaterialPageRoute(builder: (context)=>FilterView(),),);
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => FilterView(),
+                      ),
+                    );
                   },
                   icon: SvgPicture.asset(Assets.filterIcon),
                   style: IconButton.styleFrom(
@@ -131,20 +157,26 @@ class CatalogTab extends StatelessWidget {
             SizedBox(
               height: 22.h,
             ),
-            GridView.count(
-              shrinkWrap: true,
-              physics: NeverScrollableScrollPhysics(),
-              crossAxisSpacing: 20.h,
-              mainAxisSpacing: 32.h,
-              childAspectRatio: 0.7,
-              crossAxisCount: 2,
-              children: List.generate(
-                23,
-                (index) {
-                  return WishListProductItem();
-                },
-              ),
-            ),
+            refCatalogWatch.catalogresponse == null
+                ? Container()
+                : GridView.count(
+                    shrinkWrap: true,
+                    physics: NeverScrollableScrollPhysics(),
+                    crossAxisSpacing: 20.h,
+                    mainAxisSpacing: 32.h,
+                    childAspectRatio: 0.7,
+                    crossAxisCount: 2,
+                    children: List.generate(
+                      refCatalogWatch.catalogresponse!.catalogProductList!.length,
+                      // 23,
+                      (index) {
+                        CatalogProductList productData = refCatalogWatch.catalogresponse!.catalogProductList![index];
+                        return WishListProductItem(
+                          productData: productData,
+                        );
+                      },
+                    ),
+                  ),
             SizedBox(
               height: 30.h,
             ),

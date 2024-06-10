@@ -1,17 +1,24 @@
+import 'dart:ffi';
+
 import 'package:cedratools/helper/assets.dart';
 import 'package:cedratools/helper/colors.dart';
+import 'package:cedratools/models/catalog_response_model.dart';
+import 'package:cedratools/view_models/cart_view_model.dart';
 import 'package:cedratools/widgets/custom_elevated_button.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 
-class CartView extends StatelessWidget {
+class CartView extends ConsumerWidget {
   CartView({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    var refCartRead = ref.read(cartViewModel);
+    var refCartWatch = ref.watch(cartViewModel);
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -30,18 +37,27 @@ class CartView extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Expanded(
-            child: ListView.separated(
-                padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 30.h),
-                shrinkWrap: true,
-                itemBuilder: (context, index) {
-                  return CartProduct();
-                },
-                separatorBuilder: (context, index) {
-                  return SizedBox(
-                    height: 20.w,
-                  );
-                },
-                itemCount: 5),
+            child: refCartWatch.cartList.isEmpty
+                ? Center(
+                    child: Text("no data"),
+                  )
+                : ListView.separated(
+                    padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 30.h),
+                    shrinkWrap: true,
+                    itemBuilder: (context, index) {
+                      CatalogProductList product = refCartRead.cartList[index];
+                      return CartProduct(
+                        product: product,
+                        index: index,
+                        cartRefrence: refCartWatch,
+                      );
+                    },
+                    separatorBuilder: (context, index) {
+                      return SizedBox(
+                        height: 20.w,
+                      );
+                    },
+                    itemCount: refCartWatch.cartList.length),
           ),
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 25.h),
@@ -110,7 +126,7 @@ class CartView extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      "\$1,710",
+                      "\$${refCartWatch.totalPrice}",
                       style: TextStyle(
                         fontWeight: FontWeight.w400,
                         fontSize: 14.sp,
@@ -157,7 +173,7 @@ class CartView extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      "\$1,710",
+                      "\$${refCartWatch.totalPrice}",
                       style: TextStyle(
                         fontWeight: FontWeight.w700,
                         fontSize: 14.sp,
@@ -179,7 +195,9 @@ class CartView extends StatelessWidget {
                   backgroundColor: kPrimaryColor,
                   height: 50.w,
                   width: double.infinity,
-                  onPressed: () {},
+                  onPressed: () {
+                    refCartRead.checkout(context,ref);
+                  },
                 ),
               ],
             ),
@@ -191,9 +209,20 @@ class CartView extends StatelessWidget {
 }
 
 class CartProduct extends StatelessWidget {
-  const CartProduct({
+  CartProduct({
+    required this.product,
+    required this.index,
+    required this.cartRefrence,
     super.key,
   });
+  CatalogProductList product;
+  int index;
+  CartViewModel cartRefrence;
+
+  String getDiscount(String price, String totalPrice) {
+    double discount = (100 - (double.parse(price) / double.parse(totalPrice)) * 100);
+    return discount.toStringAsFixed(0);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -214,7 +243,7 @@ class CartProduct extends StatelessWidget {
       child: Column(
         children: [
           Container(
-            height: 200.h,
+            height: 252.h,
             child: Row(
               children: [
                 Expanded(
@@ -226,32 +255,34 @@ class CartProduct extends StatelessWidget {
                       borderRadius: BorderRadius.circular(6.r),
                     ),
                     child: Image.network(
-                      "https://c0.wallpaperflare.com/preview/908/343/586/5be94738e2b7b.jpg",
-                      fit: BoxFit.cover,
+                      // "https://c0.wallpaperflare.com/preview/908/343/586/5be94738e2b7b.jpg",
+                      "${product.image?.src}",
+                      // fit: BoxFit.cover,
                     ),
                   ),
                 ),
                 SizedBox(
-                  width: 8.5.w,
+                  width: 7.5.w,
                 ),
                 Expanded(
-                  flex: 4,
+                  flex: 5,
                   child: Container(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          "Launch Creader 359 Scanner 70 Brands & 29 Resetters",
+                          // "Launch Creader 359 Scanner 70 Brands & 29 Resetters",
+                          "${product.title}",
                           style: TextStyle(
                             fontSize: 13.sp,
                             fontWeight: FontWeight.w600,
                           ),
                         ),
                         SizedBox(
-                          height: 3.h,
+                          height: 2.5.h,
                         ),
                         Text(
-                          "10% OFF",
+                          "${getDiscount(product.variants![0].price!, product.variants![0].compareAtPrice!)}% OFF",
                           style: TextStyle(
                             fontSize: 12.sp,
                             fontWeight: FontWeight.w700,
@@ -259,25 +290,30 @@ class CartProduct extends StatelessWidget {
                           ),
                         ),
                         SizedBox(
-                          height: 4.h,
+                          height: 3.5.h,
                         ),
-                        Row(
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              "\$1,900",
+                              // "\$1,900",
+                              "\$${product.variants?[0].compareAtPrice}",
                               style: TextStyle(
                                 fontSize: 15.sp,
                                 fontWeight: FontWeight.w500,
                                 color: kDescriptionGreyText.withOpacity(0.5),
+                                decoration: TextDecoration.lineThrough,
+                                decorationColor: kProductGreyText,
                               ),
                             ),
                             SizedBox(
                               width: 4.w,
                             ),
                             Text(
-                              "\$1,710",
+                              // "\$1,710",
+                              "\$${product.variants?[0].price}",
                               style: TextStyle(
-                                fontSize: 24.sp,
+                                fontSize: 21.sp,
                                 fontWeight: FontWeight.w700,
                               ),
                             ),
@@ -335,7 +371,9 @@ class CartProduct extends StatelessWidget {
                 child: Row(
                   children: [
                     InkWell(
-                      onTap: () {},
+                      onTap: () {
+                        cartRefrence.removeQuantity(product);
+                      },
                       child: Padding(
                         padding: EdgeInsets.symmetric(horizontal: 6.w),
                         child: Icon(Icons.remove),
@@ -347,7 +385,8 @@ class CartProduct extends StatelessWidget {
                       margin: EdgeInsets.zero,
                       color: kQuantityBg,
                       child: Text(
-                        "2",
+                        // "2",
+                        "${product.userSelectedQuantity}",
                         style: TextStyle(
                           color: kDescriptionBlackText,
                           fontSize: 18.sp,
@@ -356,7 +395,9 @@ class CartProduct extends StatelessWidget {
                       ),
                     ),
                     InkWell(
-                      onTap: () {},
+                      onTap: () {
+                        cartRefrence.addQuantity(product.variants?[0].inventoryQuantity, product);
+                      },
                       child: Padding(
                         padding: EdgeInsets.symmetric(horizontal: 6.w),
                         child: Icon(Icons.add),
@@ -366,7 +407,12 @@ class CartProduct extends StatelessWidget {
                 ),
               ),
               Spacer(),
-              SvgPicture.asset(Assets.deleteIcon),
+              InkWell(
+                onTap: () {
+                  cartRefrence.removeFromCart(index);
+                },
+                child: SvgPicture.asset(Assets.deleteIcon),
+              ),
             ],
           ),
         ],

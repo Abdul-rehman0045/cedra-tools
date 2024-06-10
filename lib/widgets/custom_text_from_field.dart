@@ -14,6 +14,7 @@ class CustomTextFromField extends StatelessWidget {
     this.obscureText = false,
     this.maxLines,
     this.maxLength,
+    this.controller,
   });
 
   Widget? prefixIcon;
@@ -22,10 +23,12 @@ class CustomTextFromField extends StatelessWidget {
   bool obscureText;
   int? maxLines;
   int? maxLength;
+  TextEditingController? controller;
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      controller: controller,
       cursorColor: kTextFieldHint,
       obscureText: obscureText,
       maxLength: maxLength,
