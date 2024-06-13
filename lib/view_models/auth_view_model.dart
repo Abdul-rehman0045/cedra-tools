@@ -19,6 +19,9 @@ class AuthViewModel extends ChangeNotifier {
   TextEditingController emailEditingController = TextEditingController();
   TextEditingController passwordEditingController = TextEditingController();
   TextEditingController confirmPasswordEditingController = TextEditingController();
+  TextEditingController nameEditingController = TextEditingController();
+  TextEditingController phoneEditingController = TextEditingController();
+
   bool isPasswordVisible = false;
   bool isConfirmPasswordVisible = false;
   AuthenticateUserApiResponseModel? authenticateUser;
@@ -49,6 +52,18 @@ class AuthViewModel extends ChangeNotifier {
       BaseHelper.showSnackBar(
         context,
         "Email is not valid",
+        isError: true,
+      );
+      return false;
+    }
+    return true;
+  }
+
+  bool validateName(BuildContext context) {
+    if (nameEditingController.text.isEmpty) {
+      BaseHelper.showSnackBar(
+        context,
+        "Name is required",
         isError: true,
       );
       return false;
@@ -112,6 +127,8 @@ class AuthViewModel extends ChangeNotifier {
       if (response.status == 200) {
         LoginResponseModel loginResponse = LoginResponseModel.fromJson(response.data);
         box.put("token", loginResponse.userExist!.token);
+        box.put("coins", loginResponse.userExist!.coins);
+        clearForm();
         Navigator.pushNamedAndRemoveUntil(context!, AppRoutes.HOME_PAGE_VIEW, (route) => false);
       }
     } catch (e) {
@@ -129,6 +146,9 @@ class AuthViewModel extends ChangeNotifier {
       ref!.read(loaderViewModel).showLoader();
       ResponseModel response = await ApiServices.request(ApiPaths.generatePassword, method: RequestMethod.POST, data: map);
       if (response.status == 200) {
+        box.put("token", response.data['User']['token']);
+        box.put("coins", response.data['User']['coins']);
+        clearForm();
         Navigator.pushNamed(context!, AppRoutes.COMPLETE_PROFILE_VIEW);
       }
     } catch (e) {
@@ -156,5 +176,62 @@ class AuthViewModel extends ChangeNotifier {
     } finally {
       ref!.read(loaderViewModel).hideLoader();
     }
+  }
+
+  void logout(BuildContext context) {
+    box.clear();
+    Navigator.pushNamedAndRemoveUntil(context, AppRoutes.EMAIL_VIEW, (route) => false);
+  }
+
+  void deleteAccount(WidgetRef? ref, BuildContext? context) async {
+    try {
+      ref!.read(loaderViewModel).showLoader();
+      ResponseModel response = await ApiServices.request(ApiPaths.deleteAccount, method: RequestMethod.DELETE);
+      box.clear();
+      Navigator.pushNamedAndRemoveUntil(context!, AppRoutes.EMAIL_VIEW, (route) => false);
+    } catch (e) {
+    } finally {
+      ref!.read(loaderViewModel).hideLoader();
+    }
+  }
+
+  //update user profile
+  updateUserProfile(WidgetRef? ref) async {
+    var map = {
+      "name": nameEditingController.text.trim(),
+      "phone_no": phoneEditingController.text.trim(),
+    };
+    try {
+      ref!.read(loaderViewModel).showLoader();
+      ResponseModel response = await ApiServices.request(ApiPaths.updateProfile, method: RequestMethod.POST, data: map);
+    } catch (e) {
+    } finally {
+      ref!.read(loaderViewModel).hideLoader();
+    }
+  }
+
+  //get user profile
+  void getUserProfile(WidgetRef? ref) async {
+    try {
+      ref!.read(loaderViewModel).showLoader();
+      ResponseModel response = await ApiServices.request(ApiPaths.getProfile, method: RequestMethod.GET);
+      if (response.status == 200) {
+        nameEditingController.text = response.data["name"];
+        emailEditingController.text = response.data["email"];
+        phoneEditingController.text = response.data["phone"];
+      }
+    } catch (e) {
+    } finally {
+      ref!.read(loaderViewModel).hideLoader();
+    }
+  }
+
+  //clear form
+  void clearForm() {
+    emailEditingController.clear();
+    passwordEditingController.clear();
+    confirmPasswordEditingController.clear();
+    nameEditingController.clear();
+    phoneEditingController.clear();
   }
 }

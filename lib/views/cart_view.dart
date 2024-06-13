@@ -21,7 +21,6 @@ class CartView extends ConsumerWidget {
     var refCartRead = ref.read(cartViewModel);
     var refCartWatch = ref.watch(cartViewModel);
     return Scaffold(
-      backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: Colors.white,
         title: Text(
@@ -40,7 +39,7 @@ class CartView extends ConsumerWidget {
           Expanded(
             child: refCartWatch.cartList.isEmpty
                 ? Center(
-                    child: Text("no data"),
+                    child: Text("Cart is Empty"),
                   )
                 : ListView.separated(
                     padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 30.h),
@@ -60,149 +59,150 @@ class CartView extends ConsumerWidget {
                     },
                     itemCount: refCartWatch.cartList.length),
           ),
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 25.h),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  children: [
-                    SvgPicture.asset(Assets.coinIcon),
-                    SizedBox(
-                      width: 6.w,
-                    ),
-                    Text(
-                      "Use Coins",
-                      style: TextStyle(
-                        fontWeight: FontWeight.w400,
-                        fontSize: 14.sp,
-                        color: Color(0xFF263238),
+          if (refCartWatch.cartList.isNotEmpty)
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 25.h),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      SvgPicture.asset(Assets.coinIcon),
+                      SizedBox(
+                        width: 6.w,
                       ),
-                    ),
-                    Spacer(),
-                    Text(
-                      "-\$60",
-                      style: TextStyle(
-                        fontWeight: FontWeight.w400,
-                        fontSize: 14.sp,
+                      Text(
+                        "Use Coins",
+                        style: TextStyle(
+                          fontWeight: FontWeight.w400,
+                          fontSize: 14.sp,
+                          color: Color(0xFF263238),
+                        ),
                       ),
-                    ),
-                    SizedBox(
-                      width: 12.w,
-                    ),
-                    Switch(
-                      activeTrackColor: kSwitchBg,
-                      activeColor: kPrimaryColor,
-                      value: true,
-                      onChanged: (value) {},
-                    ),
-                  ],
-                ),
-                Divider(
-                  color: Colors.grey.shade400,
-                ),
-                SizedBox(
-                  height: 10.h,
-                ),
-                Text(
-                  "Purchase summary",
-                  style: TextStyle(
-                    fontWeight: FontWeight.w400,
-                    fontSize: 14.sp,
-                    color: Color(0xFF263238),
+                      Spacer(),
+                      Text(
+                        "0",
+                        style: TextStyle(
+                          fontWeight: FontWeight.w400,
+                          fontSize: 14.sp,
+                        ),
+                      ),
+                      SizedBox(
+                        width: 12.w,
+                      ),
+                      Switch(
+                        activeTrackColor: kSwitchBg,
+                        activeColor: kPrimaryColor,
+                        value: true,
+                        onChanged: (value) {},
+                      ),
+                    ],
                   ),
-                ),
-                SizedBox(
-                  height: 9.h,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      "Product",
-                      style: TextStyle(
-                        fontWeight: FontWeight.w600,
-                        fontSize: 14.sp,
-                        color: Color(0xFF263238),
-                      ),
+                  Divider(
+                    color: Colors.grey.shade400,
+                  ),
+                  SizedBox(
+                    height: 10.h,
+                  ),
+                  Text(
+                    "Purchase summary",
+                    style: TextStyle(
+                      fontWeight: FontWeight.w400,
+                      fontSize: 14.sp,
+                      color: Color(0xFF263238),
                     ),
-                    Text(
-                      "\$${refCartWatch.totalPrice}",
-                      style: TextStyle(
-                        fontWeight: FontWeight.w400,
-                        fontSize: 14.sp,
+                  ),
+                  SizedBox(
+                    height: 9.h,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        "Product",
+                        style: TextStyle(
+                          fontWeight: FontWeight.w600,
+                          fontSize: 14.sp,
+                          color: Color(0xFF263238),
+                        ),
                       ),
-                    ),
-                  ],
-                ),
-                SizedBox(
-                  height: 6.h,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      "Shipping Cost",
-                      style: TextStyle(
-                        fontWeight: FontWeight.w600,
-                        fontSize: 14.sp,
-                        color: kShippingCost,
+                      Text(
+                        "\$${refCartWatch.totalPrice}",
+                        style: TextStyle(
+                          fontWeight: FontWeight.w400,
+                          fontSize: 14.sp,
+                        ),
                       ),
-                    ),
-                    Text(
-                      "Free",
-                      style: TextStyle(
-                        fontWeight: FontWeight.w700,
-                        fontSize: 14.sp,
-                        color: kShippingCost,
+                    ],
+                  ),
+                  SizedBox(
+                    height: 6.h,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        "Shipping Cost",
+                        style: TextStyle(
+                          fontWeight: FontWeight.w600,
+                          fontSize: 14.sp,
+                          color: kShippingCost,
+                        ),
                       ),
-                    ),
-                  ],
-                ),
-                SizedBox(
-                  height: 6.h,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      "Total",
-                      style: TextStyle(
-                        fontWeight: FontWeight.w600,
-                        fontSize: 14.sp,
-                        color: Color(0xFF263238),
+                      Text(
+                        "Free",
+                        style: TextStyle(
+                          fontWeight: FontWeight.w700,
+                          fontSize: 14.sp,
+                          color: kShippingCost,
+                        ),
                       ),
-                    ),
-                    Text(
-                      "\$${refCartWatch.totalPrice}",
-                      style: TextStyle(
-                        fontWeight: FontWeight.w700,
-                        fontSize: 14.sp,
+                    ],
+                  ),
+                  SizedBox(
+                    height: 6.h,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        "Total",
+                        style: TextStyle(
+                          fontWeight: FontWeight.w600,
+                          fontSize: 14.sp,
+                          color: Color(0xFF263238),
+                        ),
                       ),
-                    ),
-                  ],
-                ),
-                SizedBox(
-                  height: 10.w,
-                ),
-                Divider(
-                  color: Colors.grey.shade400,
-                ),
-                SizedBox(
-                  height: 7.h,
-                ),
-                CustomElevatedButton(
-                  text: "Checkout",
-                  backgroundColor: kPrimaryColor,
-                  height: 50.w,
-                  width: double.infinity,
-                  onPressed: () {
-                    refCartRead.checkout(context, ref);
-                  },
-                ),
-              ],
+                      Text(
+                        "\$${refCartWatch.totalPrice}",
+                        style: TextStyle(
+                          fontWeight: FontWeight.w700,
+                          fontSize: 14.sp,
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(
+                    height: 10.w,
+                  ),
+                  Divider(
+                    color: Colors.grey.shade400,
+                  ),
+                  SizedBox(
+                    height: 7.h,
+                  ),
+                  CustomElevatedButton(
+                    text: "Checkout",
+                    backgroundColor: kPrimaryColor,
+                    height: 50.w,
+                    width: double.infinity,
+                    onPressed: () {
+                      refCartRead.checkout(context, ref);
+                    },
+                  ),
+                ],
+              ),
             ),
-          ),
         ],
       ),
     );
@@ -216,9 +216,9 @@ class CartProduct extends StatelessWidget {
     required this.cartRefrence,
     super.key,
   });
-  Product product;
-  int index;
-  CartViewModel cartRefrence;
+  final Product product;
+  final int index;
+  final CartViewModel cartRefrence;
 
   String getDiscount(String price, String totalPrice) {
     double discount = (100 - (double.parse(price) / double.parse(totalPrice)) * 100);
@@ -244,21 +244,19 @@ class CartProduct extends StatelessWidget {
       child: Column(
         children: [
           Container(
-            height: 252.h,
+            // height: 250.h,
             child: Row(
               children: [
                 Expanded(
                   flex: 3,
                   child: Container(
-                    height: double.infinity,
+                    // height: double.infinity,
                     clipBehavior: Clip.antiAlias,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(6.r),
                     ),
                     child: Image.network(
-                      // "https://c0.wallpaperflare.com/preview/908/343/586/5be94738e2b7b.jpg",
                       "${product.image?.src}",
-                      // fit: BoxFit.cover,
                     ),
                   ),
                 ),
@@ -272,7 +270,6 @@ class CartProduct extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          // "Launch Creader 359 Scanner 70 Brands & 29 Resetters",
                           "${product.title}",
                           style: TextStyle(
                             fontSize: 13.sp,
@@ -297,7 +294,6 @@ class CartProduct extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              // "\$1,900",
                               "\$${product.variants?[0].compareAtPrice}",
                               style: TextStyle(
                                 fontSize: 15.sp,
@@ -311,7 +307,6 @@ class CartProduct extends StatelessWidget {
                               width: 4.w,
                             ),
                             Text(
-                              // "\$1,710",
                               "\$${product.variants?[0].price}",
                               style: TextStyle(
                                 fontSize: 21.sp,
@@ -320,17 +315,17 @@ class CartProduct extends StatelessWidget {
                             ),
                           ],
                         ),
-                        SizedBox(
-                          height: 4.h,
-                        ),
-                        Text(
-                          "in 3 months without interest \$570VAT included",
-                          style: TextStyle(
-                            fontSize: 12.sp,
-                            fontWeight: FontWeight.w400,
-                            color: kDescriptionGreyText,
-                          ),
-                        ),
+                        // SizedBox(
+                        //   height: 4.h,
+                        // ),
+                        // Text(
+                        //   "in 3 months without interest \$570VAT included",
+                        //   style: TextStyle(
+                        //     fontSize: 12.sp,
+                        //     fontWeight: FontWeight.w400,
+                        //     color: kDescriptionGreyText,
+                        //   ),
+                        // ),
                       ],
                     ),
                   ),
@@ -338,14 +333,8 @@ class CartProduct extends StatelessWidget {
               ],
             ),
           ),
-          SizedBox(
-            height: 4.h,
-          ),
           Divider(
             color: Colors.grey.shade400,
-          ),
-          SizedBox(
-            height: 4.h,
           ),
           Row(
             children: [

@@ -1,0 +1,62 @@
+{
+  "project_info": {
+    "project_number": "286624223768",
+    "project_id": "zahra-edfc2",
+    "storage_bucket": "zahra-edfc2.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:286624223768:android:3615af628c5b2da936696d",
+        "android_client_info": {
+          "package_name": "com.zahrasalon"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "286624223768-ip7ne1125a6qsd8a1evvhho3fva0t5sb.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.zahrasalon",
+            "certificate_hash": "7068005a39673d16984c9401820148b336fca622"
+          }
+        },
+        {
+          "client_id": "286624223768-r3npt229netb217s50neb8rgnemsmhed.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.zahrasalon",
+            "certificate_hash": "607d938bf0dbe3d8d4eb357314b118f30517acf6"
+          }
+        },
+        {
+          "client_id": "286624223768-8tp60738km17nmcgppjnoba66hof596g.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyApr9z8MR_k6C05O-bch61v2gOqc-jpJpY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "286624223768-8tp60738km17nmcgppjnoba66hof596g.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "286624223768-v81qqvfsnijsh3jja4j9msdt51cek9i9.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.zahrasalon"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

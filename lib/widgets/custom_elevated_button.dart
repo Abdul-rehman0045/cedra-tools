@@ -10,18 +10,20 @@ class CustomElevatedButton extends StatelessWidget {
     required this.width,
     required this.onPressed,
     this.fontSize,
+    this.enabled = true,
   });
   final String text;
   final Color backgroundColor;
   final double height;
   final double width;
   final onPressed;
-  double? fontSize;
+  final double? fontSize;
+  final bool enabled;
 
   @override
   Widget build(BuildContext context) {
     return ElevatedButton(
-      onPressed: onPressed,
+      onPressed: enabled ? onPressed : null,
       style: ElevatedButton.styleFrom(
         elevation: 0,
         backgroundColor: backgroundColor,

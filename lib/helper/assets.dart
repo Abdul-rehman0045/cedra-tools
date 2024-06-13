@@ -33,4 +33,5 @@ class Assets {
   static String tooltip = "assets/images/tooltip.png";
   static String tooltipText = "assets/images/tooltip_text.png";
   static String slider = "assets/images/slider.png";
+  static String coinsBox = "assets/images/coins_box.png";
 }

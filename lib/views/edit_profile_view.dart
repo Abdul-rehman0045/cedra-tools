@@ -1,6 +1,5 @@
 // ignore_for_file: must_be_immutable
 
-import 'package:cedratools/helper/app_routes.dart';
 import 'package:cedratools/helper/assets.dart';
 import 'package:cedratools/helper/base_helper.dart';
 import 'package:cedratools/helper/colors.dart';
@@ -15,16 +14,27 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 
-class CompleteProfileView extends ConsumerWidget {
-  CompleteProfileView({super.key});
+class EditProfileView extends ConsumerStatefulWidget {
+  const EditProfileView({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    AuthViewModel authViewModel = ref.read(authControllerProvider);
+  ConsumerState<ConsumerStatefulWidget> createState() => _EditProfileViewState();
+}
 
+class _EditProfileViewState extends ConsumerState<EditProfileView> {
+  @override
+  void initState() {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      ref.read(authControllerProvider).getUserProfile(ref);
+    });
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    AuthViewModel authViewModel = ref.watch(authControllerProvider);
     return HideKeyPadOnOutsideTap(
       child: Scaffold(
-        backgroundColor: Colors.white,
         appBar: AppBar(
           backgroundColor: Colors.transparent,
         ),
@@ -36,7 +46,7 @@ class CompleteProfileView extends ConsumerWidget {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
-                  "Complete your Profile",
+                  "Edit Profile",
                   style: TextStyle(
                     fontSize: 30.sp,
                     fontWeight: FontWeight.w700,
@@ -45,13 +55,6 @@ class CompleteProfileView extends ConsumerWidget {
                 ),
                 SizedBox(
                   height: 40.h,
-                ),
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 53.w),
-                  child: SvgPicture.asset(Assets.completeProfilePic),
-                ),
-                SizedBox(
-                  height: 63.h,
                 ),
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 34.w),
@@ -69,6 +72,18 @@ class CompleteProfileView extends ConsumerWidget {
                       ),
                       SizedBox(height: 31.h),
                       CustomTextFromField(
+                        controller: authViewModel.emailEditingController,
+                        hintText: "Email",
+                        readOnly: true,
+                        prefixIcon: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            SvgPicture.asset(Assets.userIcon),
+                          ],
+                        ),
+                      ),
+                      SizedBox(height: 31.h),
+                      CustomTextFromField(
                         controller: authViewModel.phoneEditingController,
                         hintText: "WhatsApp Number",
                         keyboardType: TextInputType.phone,
@@ -78,22 +93,21 @@ class CompleteProfileView extends ConsumerWidget {
                             SvgPicture.asset(Assets.whatsappIcon),
                           ],
                         ),
-                    //  suffixIcon: IconButton(
-                    //       icon: SvgPicture.asset(Assets.infoIcon),
-                    //       onPressed: () {},
-                    //     ),
+                        // suffixIcon: IconButton(
+                        //   icon: SvgPicture.asset(Assets.infoIcon),
+                        //   onPressed: () {},
+                        // ),
                       ),
                       SizedBox(height: 31.h),
                       CustomElevatedButton(
-                        text: "Finish",
+                        text: "Save",
                         backgroundColor: kPrimaryColor,
                         height: 45.w,
                         width: double.infinity,
-                        onPressed: () async {
-                          if (authViewModel.validateName(context)) {
-                            await authViewModel.updateUserProfile(ref);
-                            Navigator.pushNamedAndRemoveUntil(context, AppRoutes.HOME_PAGE_VIEW, (route) => false, arguments: true);
-                          }
+                        onPressed: () {
+                          ref.read(authControllerProvider).updateUserProfile(ref);
+                          Navigator.pop(context);
+                          BaseHelper.showSnackBar(context, 'Profile updated successfully', isError: false);
                         },
                       ),
                     ],

@@ -3,10 +3,18 @@ import 'package:cedratools/models/product_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-var productInfoViewModel = ChangeNotifierProvider.autoDispose<ProductInfoViewModel>((ref) => ProductInfoViewModel());
+var productDetailsViewModel = ChangeNotifierProvider.autoDispose<ProductDetailsViewModel>((ref) => ProductDetailsViewModel());
 
-class ProductInfoViewModel extends ChangeNotifier {
+class ProductDetailsViewModel extends ChangeNotifier {
   int quantity = 0;
+
+  int _imageSliderIndex = 0;
+  get imageSliderIndex => _imageSliderIndex;
+
+  void setImageSliderIndex(int index) {
+    _imageSliderIndex = index;
+    notifyListeners();
+  }
 
   void addQuantity(int availableStack, Product product) {
     if (availableStack > quantity) {

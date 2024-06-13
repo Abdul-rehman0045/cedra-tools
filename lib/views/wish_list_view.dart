@@ -1,6 +1,6 @@
 import 'package:cedratools/helper/colors.dart';
 import 'package:cedratools/widgets/search_field.dart';
-import 'package:cedratools/widgets/wish_list_product_item.dart';
+import 'package:cedratools/widgets/product_item.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -36,7 +36,7 @@ class WishListView extends StatelessWidget {
               children: List.generate(
                 23,
                 (index) {
-                  return WishListProductItem();
+                  return ProductListItem();
                 },
               ),
             ),
@@ -49,4 +49,3 @@ class WishListView extends StatelessWidget {
     );
   }
 }
-

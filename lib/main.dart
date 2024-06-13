@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:cedratools/firebase_options.dart';
 import 'package:cedratools/helper/app_fonts.dart';
 import 'package:cedratools/helper/app_routes.dart';
 import 'package:cedratools/helper/base_helper.dart';
@@ -13,7 +16,9 @@ import 'package:cedratools/views/password_view.dart';
 import 'package:cedratools/views/reward_view.dart';
 import 'package:cedratools/views/wish_list_view.dart';
 import 'package:cedratools/widgets/loader.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -24,6 +29,7 @@ late Box box;
 
 void main() async {
   await init();
+
   runApp(
     ProviderScope(
       child: MyApp(),
@@ -32,12 +38,17 @@ void main() async {
 }
 
 Future init() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(options: Platform.isIOS ? null : DefaultFirebaseOptions.currentPlatform);
+
+  await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
+
   await initHive();
 }
 
 Future initHive() async {
   await Hive.initFlutter();
-  box = await Hive.openBox('cedra');
+  box = await Hive.openBox('cedratools');
 }
 
 class MyApp extends ConsumerWidget {
@@ -74,10 +85,11 @@ class MyApp extends ConsumerWidget {
           );
         },
         theme: ThemeData(
+          scaffoldBackgroundColor: Colors.white,
           fontFamily: AppFonts.MONTSERRAT,
           useMaterial3: true,
         ),
-        initialRoute: box.get("token") == null ? AppRoutes.EMAIL_VIEW : AppRoutes.HOME_PAGE_VIEW,
+        initialRoute: box.get("token", defaultValue: null) == null ? AppRoutes.EMAIL_VIEW : AppRoutes.HOME_PAGE_VIEW,
       ),
     );
   }

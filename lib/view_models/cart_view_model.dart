@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:cedratools/helper/app_routes.dart';
 import 'package:cedratools/models/product_response_model.dart';
 import 'package:cedratools/models/checkout_response_model.dart';
@@ -86,6 +88,26 @@ class CartViewModel extends ChangeNotifier {
         return {"variant_id": e.variants![0].id, "quantity": e.userSelectedQuantity};
       }).toList()
     };
+    try {
+      ref.read(loaderViewModel).showLoader();
+      ResponseModel response = await ApiServices.request(ApiPaths.productCheckout, method: RequestMethod.POST, data: map);
+      if (response.status == 200) {
+        checkoutObj = CheckoutResponseModel.fromJson(response.data);
+        Navigator.pushNamed(context, AppRoutes.CHECKOUT_WEB_VIEW, arguments: checkoutObj!.invoiceUrl);
+      }
+    } catch (e) {
+    } finally {
+      ref.read(loaderViewModel).hideLoader();
+    }
+  }
+
+  Future buyNow(BuildContext context, WidgetRef ref, {required Product product, required quantity}) async {
+    var map = {
+      "items": [
+        {"variant_id": '${product.variants![0].id}', "quantity": quantity}
+      ]
+    };
+    
     try {
       ref.read(loaderViewModel).showLoader();
       ResponseModel response = await ApiServices.request(ApiPaths.productCheckout, method: RequestMethod.POST, data: map);

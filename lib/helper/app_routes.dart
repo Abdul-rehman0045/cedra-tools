@@ -2,6 +2,7 @@ import 'package:cedratools/views/cart_view.dart';
 import 'package:cedratools/views/change_password_view.dart';
 import 'package:cedratools/views/checkout_web_view.dart';
 import 'package:cedratools/views/complete_profile_view.dart';
+import 'package:cedratools/views/edit_profile_view.dart';
 import 'package:cedratools/views/email_view.dart';
 import 'package:cedratools/views/homepage/homepage_view.dart';
 import 'package:cedratools/views/password_view.dart';
@@ -20,6 +21,8 @@ class AppRoutes {
   static const String PRODUCT_DETAIL_VIEW = "/product_detail_view";
   static const String CART_VIEW = "/cart_view";
   static const String CHECKOUT_WEB_VIEW = "/checkout_web_view";
+  static const String EDIT_PROFILE_VIEW = "/edit_profile_view";
+
 
   static Route? getRoute(RouteSettings routeSettings) {
     switch (routeSettings.name) {
@@ -43,7 +46,7 @@ class AppRoutes {
         {
           return MaterialPageRoute(
             builder: (_) {
-              return HomepageView();
+              return HomepageView(map: routeSettings.arguments);
             },
           );
         }
@@ -81,6 +84,12 @@ class AppRoutes {
         {
           return MaterialPageRoute(builder: (_) {
             return CheckoutWebView(map: routeSettings.arguments);
+          });
+        }
+      case EDIT_PROFILE_VIEW:
+        {
+          return MaterialPageRoute(builder: (_) {
+            return EditProfileView();
           });
         }
       default:

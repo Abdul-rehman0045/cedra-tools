@@ -1,6 +1,8 @@
 import 'package:cedratools/helper/app_routes.dart';
 import 'package:cedratools/helper/assets.dart';
+import 'package:cedratools/helper/base_helper.dart';
 import 'package:cedratools/helper/colors.dart';
+import 'package:cedratools/view_models/cart_view_model.dart';
 import 'package:cedratools/views/contact_us_view.dart';
 import 'package:cedratools/views/homepage/tabs/account_tab.dart';
 import 'package:cedratools/views/homepage/tabs/catalogue_tab.dart';
@@ -8,17 +10,19 @@ import 'package:cedratools/views/homepage/tabs/home_tab.dart';
 import 'package:cedratools/views/reward_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_advanced_drawer/flutter_advanced_drawer.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 
-class HomepageView extends StatefulWidget {
-  const HomepageView({super.key});
+class HomepageView extends ConsumerStatefulWidget {
+  final dynamic map;
+  HomepageView({super.key, required this.map});
 
   @override
-  State<HomepageView> createState() => _HomepageViewState();
+  ConsumerState<ConsumerStatefulWidget> createState() => _HomepageViewState();
 }
 
-class _HomepageViewState extends State<HomepageView> {
+class _HomepageViewState extends ConsumerState<HomepageView> {
   final _advancedDrawerController = AdvancedDrawerController();
   int currentIndex = 0;
   List pages = [];
@@ -28,11 +32,20 @@ class _HomepageViewState extends State<HomepageView> {
     pages.add(HomeTab(controller: _advancedDrawerController));
     pages.add(CatalogueTab());
     pages.add(AccountTab());
+
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      if (widget.map != null && widget.map) {
+        BaseHelper.showCoinsDialog(context, "Congratulations!\nyou won", "100 coins");
+      }
+    });
+
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+    var refCartWatch = ref.watch(cartViewModel);
+
     return AdvancedDrawer(
       backdrop: Container(
         width: double.infinity,
@@ -52,6 +65,61 @@ class _HomepageViewState extends State<HomepageView> {
         borderRadius: const BorderRadius.all(Radius.circular(16)),
       ),
       child: Scaffold(
+        appBar: AppBar(
+          backgroundColor: Colors.white,
+          leading: InkWell(
+            onTap: () {
+              _advancedDrawerController.showDrawer();
+            },
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                SvgPicture.asset(Assets.drawer),
+              ],
+            ),
+          ),
+          actions: [
+            Padding(
+              padding: EdgeInsets.only(right: 20.w),
+              child: Row(
+                children: [
+                  InkWell(
+                    onTap: () {
+                      Navigator.pushNamed(
+                        context,
+                        AppRoutes.REWARD_VIEW,
+                      );
+                    },
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        SvgPicture.asset(Assets.notoCoin),
+                      ],
+                    ),
+                  ),
+                  SizedBox(
+                    width: 12.w,
+                  ),
+                  InkWell(
+                    onTap: () {
+                      Navigator.pushNamed(context, AppRoutes.CART_VIEW);
+                    },
+                    child: refCartWatch.cartList.isEmpty
+                        ? SvgPicture.asset(Assets.cart)
+                        : Badge(
+                            backgroundColor: kBadgeBg,
+                            label: Text("${refCartWatch.cartList.length}"),
+                            textStyle: TextStyle(fontSize: 10.sp),
+                            child: SvgPicture.asset(Assets.cart),
+                          ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
         bottomNavigationBar: bottomNavigationBar(),
         body: pages[currentIndex],
       ),
@@ -62,6 +130,23 @@ class _HomepageViewState extends State<HomepageView> {
             children: [
               SizedBox(
                 height: 150.h,
+              ),
+              ListTile(
+                onTap: () {
+                  Navigator.pushNamed(
+                    context,
+                    AppRoutes.REWARD_VIEW,
+                  );
+                  _advancedDrawerController.hideDrawer();
+                },
+                title: Text(
+                  'Get Rewards',
+                  style: TextStyle(
+                    fontSize: 16.sp,
+                    fontWeight: FontWeight.w400,
+                    color: Colors.white,
+                  ),
+                ),
               ),
               ListTile(
                 onTap: () {
@@ -92,34 +177,18 @@ class _HomepageViewState extends State<HomepageView> {
               //     ),
               //   ),
               // ),
-              ListTile(
-                onTap: () {
-                  Navigator.pushNamed(
-                    context,
-                    AppRoutes.REWARD_VIEW,
-                  );
-                  _advancedDrawerController.hideDrawer();
-                },
-                title: Text(
-                  'Get Rewards',
-                  style: TextStyle(
-                    fontSize: 16.sp,
-                    fontWeight: FontWeight.w400,
-                    color: Colors.white,
-                  ),
-                ),
-              ),
-              ListTile(
-                onTap: () {},
-                title: Text(
-                  'About Us',
-                  style: TextStyle(
-                    fontSize: 16.sp,
-                    fontWeight: FontWeight.w400,
-                    color: Colors.white,
-                  ),
-                ),
-              ),
+
+              // ListTile(
+              //   onTap: () {},
+              //   title: Text(
+              //     'About Us',
+              //     style: TextStyle(
+              //       fontSize: 16.sp,
+              //       fontWeight: FontWeight.w400,
+              //       color: Colors.white,
+              //     ),
+              //   ),
+              // ),
             ],
           ),
         ),

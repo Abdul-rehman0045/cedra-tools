@@ -8,6 +8,7 @@ class AuthenticateUserApiResponseModel {
   bool? isPasswordSet;
   String? createdAt;
   String? updatedAt;
+  var coins;
 
   AuthenticateUserApiResponseModel(
       {this.id,
@@ -18,7 +19,8 @@ class AuthenticateUserApiResponseModel {
       this.token,
       this.isPasswordSet,
       this.createdAt,
-      this.updatedAt});
+      this.updatedAt,
+      this.coins});
 
   AuthenticateUserApiResponseModel.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -30,6 +32,7 @@ class AuthenticateUserApiResponseModel {
     isPasswordSet = json['isPasswordSet'];
     createdAt = json['createdAt'];
     updatedAt = json['updatedAt'];
+    coins = json['coins'];
   }
 
   Map<String, dynamic> toJson() {
@@ -43,6 +46,7 @@ class AuthenticateUserApiResponseModel {
     data['isPasswordSet'] = this.isPasswordSet;
     data['createdAt'] = this.createdAt;
     data['updatedAt'] = this.updatedAt;
+    data['coins'] = this.coins;
     return data;
   }
 }

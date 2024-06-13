@@ -27,6 +27,7 @@ class UserExist {
   bool? isPasswordSet;
   String? createdAt;
   String? updatedAt;
+  var coins;
 
   UserExist(
       {this.id,
@@ -36,7 +37,8 @@ class UserExist {
       this.token,
       this.isPasswordSet,
       this.createdAt,
-      this.updatedAt});
+      this.updatedAt,
+      this.coins});
 
   UserExist.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -47,6 +49,7 @@ class UserExist {
     isPasswordSet = json['isPasswordSet'];
     createdAt = json['createdAt'];
     updatedAt = json['updatedAt'];
+    coins = json['coins'];
   }
 
   Map<String, dynamic> toJson() {
@@ -59,6 +62,7 @@ class UserExist {
     data['isPasswordSet'] = this.isPasswordSet;
     data['createdAt'] = this.createdAt;
     data['updatedAt'] = this.updatedAt;
+    data['coins'] = this.coins;
     return data;
   }
 }

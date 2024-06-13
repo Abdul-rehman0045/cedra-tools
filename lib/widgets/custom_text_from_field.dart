@@ -15,6 +15,10 @@ class CustomTextFromField extends StatelessWidget {
     this.maxLines,
     this.maxLength,
     this.controller,
+    this.enabled = true,
+    this.readOnly = false,
+    this.keyboardType = TextInputType.text,
+
   });
 
   Widget? prefixIcon;
@@ -24,10 +28,17 @@ class CustomTextFromField extends StatelessWidget {
   int? maxLines;
   int? maxLength;
   TextEditingController? controller;
+  bool enabled;
+  bool readOnly;
+  TextInputType keyboardType;  
+
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      keyboardType: keyboardType,
+      enabled: enabled,
+      readOnly: readOnly, 
       controller: controller,
       cursorColor: kTextFieldHint,
       obscureText: obscureText,

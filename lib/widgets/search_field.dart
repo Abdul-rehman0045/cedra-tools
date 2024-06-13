@@ -5,14 +5,21 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 
 class SearchField extends StatelessWidget {
+  final onChanged;
+  final controller;
+
   const SearchField({
-    super.key,
+    this.onChanged,
+    this.controller,
+
   });
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      controller: controller,
       cursorColor: kPrimaryColor,
+      onChanged: onChanged,
       style: TextStyle(
         fontSize: 13.sp,
         fontWeight: FontWeight.w400,
